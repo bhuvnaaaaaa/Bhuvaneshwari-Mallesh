@@ -1,0 +1,45 @@
+{
+  "banner": {
+    "title": "Welcome to Our Store",
+    "subtitle": "Discover the best products just for you",
+    "button_text": "Shop Now"
+  },
+  "product_grid": {
+    "title": "Featured Products",
+    "description": "Check out our top picks for you",
+    "product_1": {
+      "name": "Product 1",
+      "price": "$29.99",
+      "description": "Description for Product 1"
+    },
+    "product_2": {
+      "name": "Product 2",
+      "price": "$39.99",
+      "description": "Description for Product 2"
+    },
+    "product_3": {
+      "name": "Product 3",
+      "price": "$49.99",
+      "description": "Description for Product 3"
+    },
+    "product_4": {
+      "name": "Product 4",
+      "price": "$59.99",
+      "description": "Description for Product 4"
+    },
+    "product_5": {
+      "name": "Product 5",
+      "price": "$69.99",
+      "description": "Description for Product 5"
+    },
+    "product_6": {
+      "name": "Product 6",
+      "price": "$79.99",
+      "description": "Description for Product 6"
+    }
+  },
+  "popup": {
+    "add_to_cart": "Add to Cart",
+    "variant_label": "Select Variant"
+  }
+}

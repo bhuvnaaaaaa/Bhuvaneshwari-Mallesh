@@ -1,0 +1,137 @@
+<div class="product-popup" id="product-popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close-popup" id="close-popup">&times;</span>
+        <h2 id="popup-product-name"></h2>
+        <p id="popup-product-price"></p>
+        <p id="popup-product-description"></p>
+        <div class="variant-options" id="variant-options"></div>
+        <div class="product-options">
+            <div class="product-colors">
+                <span>Select Color:</span>
+                <div class="color-buttons">
+                    {% for option in product.options_with_values %}
+                        {% if option.name == 'Color' %}
+                            {% for value in option.values %}
+                                <button
+                                    class="color-btn"
+                                    data-color="{{ value | downcase }}"
+                                    style="background: {{ value | downcase }};"
+                                    type="button"
+                                ></button>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="product-sizes">
+                <label for="size-select">Choose your size:</label>
+                <select id="size-select" class="size-select">
+                    {% for option in product.options_with_values %}
+                        {% if option.name == 'Size' %}
+                            {% for value in option.values %}
+                                <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button id="add-to-cart" class="add-to-cart-button">ADD TO CART</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addToCartButton = document.getElementById('add-to-cart');
+        const closePopupButton = document.getElementById('close-popup');
+        const productPopup = document.getElementById('product-popup');
+
+        // Function to open the popup with product details
+        function openPopup(product) {
+            document.getElementById('popup-product-name').innerText = product.name;
+            document.getElementById('popup-product-price').innerText = product.price;
+            document.getElementById('popup-product-description').innerText = product.description;
+            document.getElementById('variant-options').innerHTML = product.variants.map(variant => `
+                <label>
+                    <input type="radio" name="variant" value="${variant.id}" />
+                    ${variant.title}
+                </label>
+            `).join('');
+            productPopup.style.display = 'block';
+        }
+
+        // Function to close the popup
+        closePopupButton.addEventListener('click', function() {
+            productPopup.style.display = 'none';
+        });
+
+        // Add to cart functionality
+        addToCartButton.addEventListener('click', function() {
+            const selectedVariant = document.querySelector('input[name="variant"]:checked');
+            if (selectedVariant) {
+                const variantId = selectedVariant.value;
+                // Add the selected variant to the cart
+                fetch('/cart/add.js', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: variantId, quantity: 1 }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Product added to cart:', data);
+                    // Check if the "Soft Winter Jacket" should also be added
+                    if (variantId === 'black-medium-variant-id') { // Replace with actual variant ID
+                        fetch('/cart/add.js', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ id: 'soft-winter-jacket-variant-id', quantity: 1 }), // Replace with actual variant ID
+                        });
+                    }
+                    productPopup.style.display = 'none'; // Close popup after adding to cart
+                })
+                .catch(error => console.error('Error adding to cart:', error));
+            }
+        });
+    });
+</script>
+
+<style>
+    .product-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .popup-content {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+    .close-popup {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+    .add-to-cart-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+    .add-to-cart-button:hover {
+        background-color: #0056b3;
+    }
+</style>

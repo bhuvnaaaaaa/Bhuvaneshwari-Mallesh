@@ -1,0 +1,286 @@
+{% schema %}
+{
+  "name": "Custom Banner",
+  "settings": [
+    { 
+      "type": "text", 
+      "id": "logo_text", 
+      "label": "Logo text", 
+      "default": "TISSO VISON" 
+    },
+    {
+      "type": "text",
+      "id": "topbar_text",
+      "label": "Top Bar Text",
+      "default": "Find the ideal gift for your loved ones."
+    },
+    {
+      "type": "text",
+      "id": "choose_gift_text",
+      "label": "Choose Gift Button Text",
+      "default": "CHOOSE GIFT"
+    },
+    {
+      "type": "url",
+      "id": "choose_gift_link",
+      "label": "Choose Gift Button Link",
+      "default": "#"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "banner_description",
+      "label": "Banner Description",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+    },
+    {
+      "type": "text",
+      "id": "shop_now_text",
+      "label": "Shop Now Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "shop_now_link",
+      "label": "Shop Now Button Link",
+      "default": "#"
+    },
+    {
+      "type": "image_picker",
+      "id": "vector_frame_1",
+      "label": "Vector Frame 1 (Lower Half)"
+    },
+    {
+      "type": "image_picker",
+      "id": "vector_frame_2",
+      "label": "Vector Frame 2 (Upper Right)"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer Text",
+      "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Banner",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-banner">
+  <!-- Top Bar -->
+  <div class="banner-topbar">
+    <div class="gift-banner__logo">{{ section.settings.logo_text }}</div>
+    <div class="topbar-text">{{ section.settings.topbar_text }}</div>
+     <a class="gift-banner__rightcta" href="{{ section.settings.button_url }}">{{ section.settings.cta_text }}</a>
+  </div>
+  <!-- Banner Main -->
+  <div class="banner-main">
+    <div class="banner-vectors">
+      {% if section.settings.vector_frame_1 != blank %}
+        <img src="{{ section.settings.vector_frame_1 | img_url: '900x600' }}" alt="Vector Frame 1" class="vector-frame-1" />
+      {% endif %}
+      {% if section.settings.vector_frame_2 != blank %}
+        <img src="{{ section.settings.vector_frame_2 | img_url: '600x600' }}" alt="Vector Frame 2" class="vector-frame-2" />
+      {% endif %}
+    </div>
+    <div class="banner-content">
+      <h1>{{ section.settings.banner_title }}</h1>
+      <p>{{ section.settings.banner_description }}</p>
+      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">{{ section.settings.shop_now_text }}</a>
+    </div>
+  </div> 
+  <div class="banner-footer-text">
+    {{ section.settings.footer_text }}
+  </div>
+</div>
+
+<style>
+.custom-banner {
+  width: 100%;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  font-family: Avenir LT Std, Jost;
+}
+.banner-topbar {
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  height: 64px;
+  box-sizing: border-box;
+}
+.topbar-text {
+  font-size: 15px;
+  color: #222;
+}
+.choose-gift-btn {
+  background: #fff544;
+  color: #111;
+  padding: 12px 32px;
+  border-radius: 2px;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 16px;
+  border: none;
+  transition: background 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.choose-gift-btn:hover {
+  background: #111;
+  color: #fff544;
+}
+.banner-main {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  background: #fff;
+}
+.banner-vectors {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.vector-frame-1 {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 55vw;
+  max-width: 800px;
+  min-width: 300px;
+  z-index: 1;
+}
+.vector-frame-2 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 45vw;
+  max-width: 600px;
+  min-width: 200px;
+  z-index: 1;
+}
+.banner-content {
+  position: relative;
+  z-index: 2;
+  padding: 80px 48px 48px 48px;
+  max-width: 600px;
+  background: rgba(255,255,255,0.95);
+  margin: 60px 0 60px 60px;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: left;
+}
+.banner-content h1 {
+  font-size: 56px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111;
+  letter-spacing: -1px;
+}
+.banner-content p {
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+.shop-now-btn {
+  background: #111;
+  color: #fff;
+  padding: 16px 40px;
+  border-radius: 2px;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 16px;
+  border: none;
+  transition: background 0.3s, color 0.3s;
+  display: inline-block;
+}
+.shop-now-btn:hover {
+  background: #fff544;
+  color: #111;
+}
+.banner-footer-text {
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  color: #222;
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  padding: 10px 0 10px 0;
+  font-family: Jost;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 13.42px;
+  letter-spacing: 0px;
+  text-align: center;
+  vertical-align: middle;
+
+}
+@media (max-width: 600px) {
+  .banner-footer-text {
+    font-size: 12px;
+    padding: 8px 0;
+  }
+}
+@media (max-width: 900px) {
+  .banner-content h1 { font-size: 36px; }
+  .banner-content { padding: 40px 16px 24px 16px; margin: 24px 0 24px 0; }
+  .vector-frame-1, .vector-frame-2 { min-width: 120px; }
+}
+@media (max-width: 600px) {
+  .banner-topbar { flex-direction: column; height: auto; padding: 8px 8px; }
+  .banner-content { max-width: 100%; margin: 16px 0; padding: 24px 8px; }
+  .banner-main { min-height: 350px; }
+  .vector-frame-1, .vector-frame-2 { display: none; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Button hover animations (for mobile fallback)
+  document.querySelectorAll('.choose-gift-btn').forEach(btn => {
+    btn.addEventListener('mouseover', function() {
+      this.style.background = '#111';
+      this.style.color = '#fff544';
+    });
+    btn.addEventListener('mouseout', function() {
+      this.style.background = '#fff544';
+      this.style.color = '#111';
+    });
+  });
+  document.querySelectorAll('.shop-now-btn').forEach(btn => {
+    btn.addEventListener('mouseover', function() {
+      this.style.background = '#fff544';
+      this.style.color = '#111';
+    });
+    btn.addEventListener('mouseout', function() {
+      this.style.background = '#111';
+      this.style.color = '#fff';
+    });
+  });
+});
+</script>

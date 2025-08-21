@@ -1,0 +1,104 @@
+body {
+  .custom-banner {
+    position: relative;
+    text-align: center;
+    background: #fff;
+    background-color: #f9f9f9;
+    margin: 0 0 0 1;
+    padding: 8, 16;
+    font-family: Avenir LT Std, Jost;
+    font-weight: 750;
+    font-style: 95 Black;
+    font-size: 100px;
+    line-height: 141%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+  }
+  .banner-topbar {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    box-sizing: border-box;
+  }
+  .topbar-text {
+    font-size: 15px;
+    color: #222;
+  }
+  .choose-gift-btn {
+    background: #fff544;
+    color: #111;
+    padding: 12px 32px;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+    border: none;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .choose-gift-btn:hover,
+  .choose-gift-btn.active {
+    background: #111;
+    color: #fff544;
+    transform: scale(1.08);
+  }
+  .banner-content {
+    padding: 40px 20px 20px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.95);
+    position: relative;
+    z-index: 2;
+    text-align: left;
+  }
+  .banner-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #111;
+    letter-spacing: -1px;
+  }
+  .banner-content p {
+    font-size: 18px;
+    color: #222;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+  .banner-button {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: #111;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 2px;
+    font-family: Jost, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+    border: none;
+    margin-top: 10px;
+  }
+  .banner-button:hover,
+  .banner-button.active {
+    background-color: #fff544;
+    color: #111;
+    transform: scale(1.08);
+  }
+  .banner-images img {
+    max-width: 100%;
+    height: auto;
+  }
+  @media (max-width: 600px) {
+    .banner-topbar { flex-direction: column; height: auto; padding: 8px 8px; }
+    .banner-content { max-width: 100%; padding: 24px 8px; }
+  }
+}
