@@ -1,0 +1,81 @@
+{% schema %}
+{
+  "name": "Gift Guide Landing",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "default": "TISSO VISON"
+    },
+    {
+      "type": "text",
+      "id": "banner_tagline",
+      "label": "Banner Tagline",
+      "default": "Find the ideal gift for your loved ones."
+    },
+    {
+      "type": "text",
+      "id": "guide_title",
+      "label": "Guide Title",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "guide_description",
+      "label": "Guide Description",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+    },
+    {
+      "type": "text",
+      "id": "sustainability",
+      "label": "Sustainability Text",
+      "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+    },
+    {
+      "type": "product_list",
+      "id": "featured_products",
+      "label": "Gift Guide Products",
+      "limit": 6
+    }
+  ]
+}
+{% endschema %}
+
+<div class="gift-guide-banner">
+  <div class="gift-guide-banner__top">
+    <span class="gift-guide__brand">{{ section.settings.brand_name }}</span>
+    <span class="gift-guide__tagline">{{ section.settings.banner_tagline }}</span>
+    <button class="gift-guide__choose-btn" id="choose-gift-btn">CHOOSE GIFT <span aria-hidden="true">→</span></button>
+  </div>
+  <div class="gift-guide-banner__art"></div>
+  <div class="gift-guide-banner__center">
+    <h1 class="gift-guide__title">{{ section.settings.guide_title }}</h1>
+    <p class="gift-guide__desc">{{ section.settings.guide_description }}</p>
+    <button class="gift-guide__shop-btn" id="shop-now-btn">SHOP NOW <span aria-hidden="true">→</span></button>
+  </div>
+  <div class="gift-guide-banner__bottom">
+    <span class="gift-guide__sustain">{{ section.settings.sustainability }}</span>
+  </div>
+</div>
+<div class="gift-guide-products">
+  <div class="gift-guide-products__grid">
+    {% for prod in section.settings.featured_products %}
+      {% assign product = all_products[prod] %}
+      <div class="gift-guide-product-card" data-handle="{{ product.handle }}" data-id="{{ product.id }}">
+        <img src="{{ product.featured_image | img_url: '600x600' }}" alt="{{ product.title }}" />
+        <div class="gift-guide-product-card__overlay">
+          <span class="gift-guide-product-card__title">{{ product.title }}</span>
+          <span class="gift-guide-product-card__price">{{ product.price | money }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="gift-guide-popup" id="product-popup">
+  <div class="gift-guide-popup__content" id="popup-content">
+    <!-- content dynamically injected by JS -->
+  </div>
+</div>
+<div id="gift-guide-backdrop" class="gift-guide-popup__backdrop"></div>
