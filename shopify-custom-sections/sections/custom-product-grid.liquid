@@ -1,0 +1,105 @@
+{% schema %}
+{
+  "name": "Custom Product Grid",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Select Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Select Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Select Product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Select Product 4"
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Select Product 5"
+    },
+    {
+      "type": "product",
+      "id": "product_6",
+      "label": "Select Product 6"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Grid",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-product-grid">
+  <div class="grid-container">
+    {% for i in (1..6) %}
+      {% assign product = section.settings["product_" | append: i] %}
+      {% if product %}
+        <div class="product-block" data-product-id="{{ product.id }}">
+          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+          <h3>{{ product.title }}</h3>
+          <p>{{ product.price | money }}</p>
+          <button class="view-details" data-product-id="{{ product.id }}">View Details</button>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.view-details').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.getAttribute('data-product-id');
+      // Logic to open the popup and load product details
+      openProductPopup(productId);
+    });
+  });
+
+  function openProductPopup(productId) {
+    // Fetch product details and display in popup
+    // Implement the popup functionality here
+  }
+</script>
+
+<style>
+  .custom-product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .product-block {
+    width: calc(33.33% - 20px);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .product-block img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .product-block {
+      width: calc(50% - 10px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-block {
+      width: 100%;
+    }
+  }
+</style>
