@@ -2,42 +2,15 @@
 {
   "name": "Custom Product Grid",
   "settings": [
-    {
-      "type": "product",
-      "id": "product_1",
-      "label": "Select Product 1"
-    },
-    {
-      "type": "product",
-      "id": "product_2",
-      "label": "Select Product 2"
-    },
-    {
-      "type": "product",
-      "id": "product_3",
-      "label": "Select Product 3"
-    },
-    {
-      "type": "product",
-      "id": "product_4",
-      "label": "Select Product 4"
-    },
-    {
-      "type": "product",
-      "id": "product_5",
-      "label": "Select Product 5"
-    },
-    {
-      "type": "product",
-      "id": "product_6",
-      "label": "Select Product 6"
-    }
+    { "type": "product", "id": "product_1", "label": "Select Product 1" },
+    { "type": "product", "id": "product_2", "label": "Select Product 2" },
+    { "type": "product", "id": "product_3", "label": "Select Product 3" },
+    { "type": "product", "id": "product_4", "label": "Select Product 4" },
+    { "type": "product", "id": "product_5", "label": "Select Product 5" },
+    { "type": "product", "id": "product_6", "label": "Select Product 6" }
   ],
   "presets": [
-    {
-      "name": "Custom Product Grid",
-      "category": "Custom"
-    }
+    { "name": "Custom Product Grid", "category": "Custom" }
   ]
 }
 {% endschema %}
@@ -61,6 +34,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.view-details').forEach(button => {
     button.addEventListener('click', function() {
       const productId = this.getAttribute('data-product-id');
@@ -73,35 +47,83 @@
     // Fetch product details and display in popup
     // Implement the popup functionality here
   }
+});
 </script>
 
 <style>
   .custom-product-grid {
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 0;
+    background: #fff;
+  }
+  .grid-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 24px 0;
   }
-
   .product-block {
     width: calc(33.33% - 20px);
-    margin-bottom: 20px;
+    margin-bottom: 32px;
     text-align: center;
+    box-sizing: border-box;
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    transition: box-shadow 0.2s;
   }
-
+  .product-block:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
   .product-block img {
     max-width: 100%;
     height: auto;
+    border-radius: 4px;
+    margin-bottom: 12px;
   }
-
-  @media (max-width: 768px) {
+  .product-block h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 8px 0 4px 0;
+    color: #222;
+  }
+  .product-block p {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 12px;
+  }
+  .view-details {
+    background: #111;
+    color: #fff;
+    padding: 10px 28px;
+    border-radius: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+  }
+  .view-details:hover {
+    background: #fff544;
+    color: #111;
+    transform: scale(1.05);
+  }
+  @media (max-width: 900px) {
     .product-block {
       width: calc(50% - 10px);
     }
   }
-
-  @media (max-width: 480px) {
+  @media (max-width: 600px) {
+    .grid-container {
+      flex-direction: column;
+      gap: 0;
+    }
     .product-block {
       width: 100%;
+      margin-bottom: 20px;
     }
   }
 </style>

@@ -1,11 +1,10 @@
-body {
+.custom-product-grid .grid-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 0 auto;
     padding: 20px;
 }
-
 .product-block {
     width: calc(33.33% - 20px);
     margin-bottom: 20px;

@@ -1,17 +1,16 @@
-body {
-  .custom-banner {
+.custom-banner {
     position: relative;
     text-align: center;
     background: #fff;
     background-color: #f9f9f9;
-    margin: 0 0 0 1;
-    padding: 8, 16;
-    font-family: Avenir LT Std, Jost;
-    font-weight: 750;
-    font-style: 95 Black;
-    font-size: 100px;
-    line-height: 141%;
-    letter-spacing: 0%;
+    margin: 0;
+    padding: 8px 16px;
+    font-family: Avenir LT Std, Jost, Arial, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1.41;
+    letter-spacing: 0;
     text-transform: uppercase;
   }
   .banner-topbar {
@@ -72,7 +71,7 @@ body {
     margin-bottom: 32px;
     line-height: 1.5;
   }
-  .banner-button {
+  .shop-now-btn {
     display: inline-block;
     padding: 16px 40px;
     background-color: #111;
@@ -87,8 +86,8 @@ body {
     border: none;
     margin-top: 10px;
   }
-  .banner-button:hover,
-  .banner-button.active {
+  .shop-now-btn:hover,
+  .shop-now-btn.active {
     background-color: #fff544;
     color: #111;
     transform: scale(1.08);
@@ -101,4 +100,3 @@ body {
     .banner-topbar { flex-direction: column; height: auto; padding: 8px 8px; }
     .banner-content { max-width: 100%; padding: 24px 8px; }
   }
-}

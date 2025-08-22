@@ -81,7 +81,7 @@
   <div class="banner-topbar">
     <span class="logo_text">{{ section.settings.logo_text }}</span>
     <span class="topbar-text">{{ section.settings.topbar_text }}</span>
-     <a class="gift-banner__rightcta" href="{{ section.settings.button_url }}">{{ section.settings.cta_text }}</a>
+    <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link }}">{{ section.settings.choose_gift_text }}</a>
   </div>
   <!-- Banner Main -->
   <div class="banner-main">
@@ -164,11 +164,9 @@
 }
 .banner-vectors {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 55vw;
-  max-width: 800px;
-  min-width: 300px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
   z-index: 1;
 }
 .vector-frame-1 {
@@ -244,12 +242,10 @@
   font-weight: 400;
   font-style: Regular;
   font-size: 16px;
-  leading-trim: NONE;
   line-height: 13.42px;
   letter-spacing: 0px;
   text-align: center;
   vertical-align: middle;
-
 }
 @media (max-width: 600px) {
   .banner-footer-text {
@@ -272,7 +268,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Button hover animations (for mobile fallback)
   document.querySelectorAll('.choose-gift-btn').forEach(btn => {
     btn.addEventListener('mouseover', function() {
       this.style.background = '#111';

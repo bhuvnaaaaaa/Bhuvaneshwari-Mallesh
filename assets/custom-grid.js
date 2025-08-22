@@ -104,5 +104,3 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 });
-
-<script src="{{ 'custom-grid.js' | asset_url }}"></script>
