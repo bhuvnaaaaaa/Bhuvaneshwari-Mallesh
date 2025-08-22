@@ -45,7 +45,8 @@
 <div class="custom-product-grid">
   <div class="grid-container">
     {% for i in (1..6) %}
-      {% assign product_handle = section.settings["product_" | append: i] %}
+      {% assign product_key = 'product_' | append: i %}
+      {% assign product_handle = section.settings[product_key] %}
       {% assign product = all_products[product_handle] %}
       {% if product %}
         <div class="product-block" data-product-id="{{ product.id }}">
