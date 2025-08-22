@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             variantsContainer.appendChild(variantOption);
         });
 
-        popup.classList.add('active');
+        popup.classList.add('active');Th
     }
 
     // Function to close the popup
@@ -104,3 +104,5 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 });
+
+<script src="{{ 'custom-grid.js' | asset_url }}"></script>
