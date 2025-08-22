@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             variantsContainer.appendChild(variantOption);
         });
 
-        popup.classList.add('active');Th
+        popup.classList.add('active');
     }
 
     // Function to close the popup
