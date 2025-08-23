@@ -73,7 +73,7 @@
 
 /* --- Text Content --- */
 .banner-text-content {
-  position: bottom-left;
+  position: relative;
   z-index: 3; /* Sits on top of all vectors */
   max-width: 35rem;
   padding: 2rem 2.5rem;
@@ -88,7 +88,6 @@
   color: #000;
   vertical-align: middle;
   margin: 0 0 1.5rem 0;
-  position: bottom-left;
 }
 .banner-text-content p {
   font-family: Jost;
