@@ -88,6 +88,7 @@
   color: #000;
   vertical-align: middle;
   margin: 0 0 1.5rem 0;
+  position: bottom-left;
 }
 .banner-text-content p {
   font-family: Jost;
