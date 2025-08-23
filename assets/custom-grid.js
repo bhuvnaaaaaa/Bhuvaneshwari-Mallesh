@@ -1,106 +1,204 @@
-// This file contains the JavaScript functionality for the product grid, including the logic for displaying products and handling the popup functionality.
+document.addEventListener('DOMContentLoaded', () => {
+  // --- DOM Element Selectors ---
+  const gridContainer = document.querySelector('.custom-product-grid-container');
+  const modal = document.getElementById('product-popup-modal');
+  if (!gridContainer || !modal) return; // Exit if essential elements are missing
 
-document.addEventListener('DOMContentLoaded', function() {
-    const productGrid = document.querySelector('.custom-product-grid');
-    const popup = document.querySelector('.product-popup');
-    const popupCloseButton = popup.querySelector('.popup-close');
-    const addToCartButton = popup.querySelector('.add-to-cart-button');
-    let currentProduct = null;
+  const grid = gridContainer.querySelector('.product-grid');
+  const closeButton = modal.querySelector('.popup-close-button');
+  const form = modal.querySelector('#popup-add-to-cart-form');
+  
+  // --- State Variable ---
+  let currentProductData = null;
 
-    // Function to open the popup with product details
-    function openPopup(product) {
-        currentProduct = product;
-        popup.querySelector('.product-name').textContent = product.name;
-        popup.querySelector('.product-price').textContent = product.price;
-        popup.querySelector('.product-description').textContent = product.description;
+  // --- Main Event Listener for Grid Clicks (Event Delegation) ---
+  grid.addEventListener('click', (event) => {
+    const gridItem = event.target.closest('.grid-item');
+    if (gridItem) {
+      const productJson = gridItem.dataset.productJson;
+      if (productJson) {
+        currentProductData = JSON.parse(productJson);
+        openPopup();
+      }
+    }
+  });
+  
+  // --- Popup Functions ---
+  function openPopup() {
+    if (!currentProductData) return;
+    
+    // 1. Populate static content
+    modal.querySelector('#popup-product-title').textContent = currentProductData.title;
+    modal.querySelector('#popup-product-image').src = currentProductData.featured_image || '';
+    modal.querySelector('#popup-product-description').innerHTML = currentProductData.description;
+    
+    // 2. Render variant options dynamically
+    renderVariantSelectors();
+    
+    // 3. Set initial state (price, button)
+    updateVariantState();
+    
+    // 4. Show the modal
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('is-visible'), 10); // For transition
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+  }
+  
+  function closePopup() {
+    modal.classList.remove('is-visible');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300); // Match CSS transition duration
+  }
+  
+  // --- Dynamic Variant Rendering ---
+  function renderVariantSelectors() {
+    const optionsContainer = modal.querySelector('#popup-variant-options');
+    optionsContainer.innerHTML = ''; // Clear previous options
+    
+    currentProductData.options_with_values.forEach((option, index) => {
+      const fieldset = document.createElement('fieldset');
+      fieldset.classList.add('variant-fieldset');
+      
+      const legend = document.createElement('legend');
+      legend.classList.add('variant-legend');
+      legend.textContent = option.name;
+      fieldset.appendChild(legend);
 
-        // Populate variants
-        const variantsContainer = popup.querySelector('.product-variants');
-        variantsContainer.innerHTML = '';
-        product.variants.forEach(variant => {
-            const variantOption = document.createElement('option');
-            variantOption.value = variant.id;
-            variantOption.textContent = variant.title;
-            variantsContainer.appendChild(variantOption);
+      // Render as buttons for the first option (e.g., Color), dropdown for others
+      if (index === 0) {
+        const buttonsWrapper = document.createElement('div');
+        buttonsWrapper.classList.add('variant-buttons');
+        option.values.forEach((value, valueIndex) => {
+          const inputId = `option-${index}-${valueIndex}`;
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.id = inputId;
+          input.name = `option-${index}`;
+          input.value = value;
+          input.classList.add('variant-radio-input');
+          if (valueIndex === 0) input.checked = true; // Pre-select first option
+          
+          const label = document.createElement('label');
+          label.htmlFor = inputId;
+          label.textContent = value;
+          label.classList.add('variant-radio-label');
+          
+          buttonsWrapper.appendChild(input);
+          buttonsWrapper.appendChild(label);
         });
+        fieldset.appendChild(buttonsWrapper);
+      } else {
+        const selectWrapper = document.createElement('div');
+        selectWrapper.classList.add('variant-select-wrapper');
+        const select = document.createElement('select');
+        select.name = `option-${index}`;
+        select.classList.add('variant-select');
+        option.values.forEach(value => {
+            const optionElement = document.createElement('option');
+            optionElement.value = value;
+            optionElement.textContent = value;
+            select.appendChild(optionElement);
+        });
+        selectWrapper.appendChild(select);
+        fieldset.appendChild(selectWrapper);
+      }
+      optionsContainer.appendChild(fieldset);
+    });
 
-        popup.classList.add('active');
+    // Add change listeners to new inputs
+    optionsContainer.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('change', updateVariantState);
+    });
+  }
+
+  // --- State Update and Cart Logic ---
+  function updateVariantState() {
+    const selectedOptions = Array.from(
+      modal.querySelectorAll('#popup-variant-options input:checked, #popup-variant-options select')
+    ).map(el => el.value);
+    
+    const selectedVariant = currentProductData.variants.find(variant => {
+      return variant.options.every((option, index) => option === selectedOptions[index]);
+    });
+    
+    const priceEl = modal.querySelector('#popup-product-price');
+    const buttonEl = modal.querySelector('#popup-add-to-cart-button');
+    const variantIdEl = modal.querySelector('#popup-selected-variant-id');
+    const buttonTextEl = buttonEl.querySelector('.button-text');
+    
+    if (selectedVariant) {
+      priceEl.textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(selectedVariant.price / 100);
+      variantIdEl.value = selectedVariant.id;
+      if (selectedVariant.available) {
+        buttonEl.disabled = false;
+        buttonTextEl.textContent = 'Add to Cart';
+      } else {
+        buttonEl.disabled = true;
+        buttonTextEl.textContent = 'Sold Out';
+      }
+    } else {
+      buttonEl.disabled = true;
+      buttonTextEl.textContent = 'Unavailable';
     }
+  }
+  
+  async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const variantId = form.querySelector('#popup-selected-variant-id').value;
+    if (!variantId) return;
 
-    // Function to close the popup
-    function closePopup() {
-        popup.classList.remove('active');
-        currentProduct = null;
-    }
+    const button = form.querySelector('#popup-add-to-cart-button');
+    button.disabled = true;
+    button.querySelector('.button-text').textContent = 'Adding...';
 
-    // Event listener for closing the popup
-    popupCloseButton.addEventListener('click', closePopup);
+    let itemsToAdd = [{ id: variantId, quantity: 1 }];
 
-    // Event listener for the add to cart button
-    addToCartButton.addEventListener('click', function() {
-        if (currentProduct) {
-            const selectedVariantId = popup.querySelector('.product-variants').value;
-            addToCart(selectedVariantId);
-            closePopup();
+    // --- SPECIAL CART RULE LOGIC ---
+    const selectedVariant = currentProductData.variants.find(v => v.id == variantId);
+    const softJacketHandle = gridContainer.dataset.softJacketHandle;
+    
+    if (selectedVariant && softJacketHandle && selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'M') {
+      try {
+        const res = await fetch(`/products/${softJacketHandle}.js`);
+        const jacketData = await res.json();
+        const jacketVariantId = jacketData.variants.find(v => v.available)?.id;
+        if (jacketVariantId) {
+          itemsToAdd.push({ id: jacketVariantId, quantity: 1 });
         }
-    });
-
-    // Function to add the product to the cart
-    function addToCart(variantId) {
-        fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: variantId, quantity: 1 }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Product added to cart:', data);
-            // Check for specific variant condition to add the additional product
-            if (variantId === 'black-medium-variant-id') { // Replace with actual variant ID
-                addToCart('soft-winter-jacket-variant-id'); // Replace with actual variant ID
-            }
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+      } catch (e) {
+        console.error("Could not fetch special product:", e);
+      }
     }
+    
+    // --- Add to Cart API Call ---
+    try {
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: itemsToAdd })
+      });
+      closePopup();
+      // Optional: update cart count or show a success notification
+    } catch (e) {
+      console.error("Error adding to cart:", e);
+      button.querySelector('.button-text').textContent = 'Error!';
+    } finally {
+        // Re-enable button after a delay
+        setTimeout(() => {
+            if(!button.disabled){
+                button.disabled = false;
+            }
+        }, 1000);
+    }
+  }
 
-    // Event listener for product blocks
-    const productBlocks = productGrid.querySelectorAll('.product-block');
-    productBlocks.forEach(block => {
-        block.addEventListener('click', function() {
-            const productData = {
-                name: block.dataset.productName,
-                price: block.dataset.productPrice,
-                description: block.dataset.productDescription,
-                variants: JSON.parse(block.dataset.productVariants)
-            };
-            openPopup(productData);
-        });
-    });
-
-    // Color button selection logic
-    document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-        });
-    });
-
-    // Size dropdown hover effect (works in some browsers)
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .size-select option:hover, .size-select option:focus {
-            background: #111 !important;
-            color: #fff !important;
-        }
-    `;
-    document.head.appendChild(style);
+  // --- Attach Event Listeners ---
+  closeButton.addEventListener('click', closePopup);
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closePopup(); // Close if clicking on the overlay
+  });
+  form.addEventListener('submit', handleFormSubmit);
 });

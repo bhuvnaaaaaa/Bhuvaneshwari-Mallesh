@@ -1,102 +1,170 @@
-.custom-banner {
-    position: relative;
-    text-align: center;
-    background: #fff;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 8px 16px;
-    font-family: Avenir LT Std, Jost, Arial, sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 18px;
-    line-height: 1.41;
-    letter-spacing: 0;
-    text-transform: uppercase;
+/* --- Main Banner Container --- */
+.custom-banner-container {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh; /* Ensures banner has height */
+}
+
+/* --- Top Bar --- */
+.banner-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2.5rem;
+  border-bottom: 2px solid #000;
+  flex-shrink: 0; /* Prevents the top bar from shrinking */
+}
+.top-bar-left, .top-bar-center, .top-bar-right {
+  flex: 1;
+}
+.top-bar-center { text-align: center; }
+.top-bar-right { text-align: right; }
+.logo-text {
+  font-family: sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+}
+.top-bar-promo-text {
+  font-family: serif;
+  font-size: 1rem;
+}
+
+/* --- Main Content Area --- */
+.banner-main-area {
+  position: relative;
+  flex-grow: 1; /* Allows this area to fill available space */
+  display: flex;
+  align-items: center;
+}
+
+/* --- Vector Image Positioning --- */
+.banner-vectors-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Allows clicks to go through to content */
+}
+.vector-frame-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+.vector-frame-2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 55%; /* Covers bottom-right quadrant */
+  max-width: 800px;
+  height: auto;
+  z-index: 2; /* Sits on top of the first vector */
+}
+
+/* --- Text Content --- */
+.banner-text-content {
+  position: relative;
+  z-index: 3; /* Sits on top of all vectors */
+  max-width: 35rem;
+  padding: 2rem 2.5rem;
+  text-align: left;
+}
+.banner-text-content h1 {
+  font-family: sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive font size */
+  font-weight: 700;
+  line-height: 1.1;
+  color: #000;
+  margin: 0 0 1.5rem 0;
+}
+.banner-text-content p {
+  font-family: serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #333;
+  margin: 0 0 2rem 0;
+}
+
+/* --- Buttons & Hover Transitions --- */
+.choose-gift-btn,
+.shop-now-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  border: 2px solid #000;
+  cursor: pointer;
+  /* THE SMOOTH TRANSITION */
+  transition: background-color 0.4s ease-out, color 0.4s ease-out, transform 0.2s ease-out;
+}
+.choose-gift-btn {
+  background-color: #f7e999; /* Figma Yellow */
+  color: #111;
+  padding: 0.75rem 1.5rem;
+}
+.shop-now-btn {
+  background-color: #111;
+  color: #fff;
+  padding: 1rem 2.5rem;
+}
+
+/* HOVER STATES */
+.choose-gift-btn:hover {
+  background-color: #111;
+  color: #f7e999;
+  transform: translateY(-3px); /* Button lift effect */
+}
+.shop-now-btn:hover {
+  background-color: #f7e999;
+  color: #111;
+  transform: translateY(-3px);
+}
+
+/* --- Bottom Footer Bar --- */
+.banner-footer-bar {
+  text-align: center;
+  padding: 1rem 2.5rem;
+  border-top: 2px solid #000;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .banner-top-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
   }
-  .banner-topbar {
-    width: 100%;
-    background: #fff;
-    border-bottom: 1px solid #e5e5e5;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    height: 64px;
-    box-sizing: border-box;
+  .top-bar-center { order: -1; } /* Move promo text to top */
+  .banner-main-area {
+    align-items: flex-start;
+    padding-top: 2rem;
   }
-  .topbar-text {
-    font-size: 15px;
-    color: #222;
-  }
-  .choose-gift-btn {
-    background: #fff544;
-    color: #111;
-    padding: 12px 32px;
-    border-radius: 2px;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 16px;
-    border: none;
-    transition: background 0.3s, color 0.3s, transform 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .choose-gift-btn:hover,
-  .choose-gift-btn.active {
-    background: #111;
-    color: #fff544;
-    transform: scale(1.08);
-  }
-  .banner-content {
-    padding: 40px 20px 20px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    background: rgba(255,255,255,0.95);
-    position: relative;
-    z-index: 2;
-    text-align: left;
-  }
-  .banner-content h1 {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: #111;
-    letter-spacing: -1px;
-  }
-  .banner-content p {
-    font-size: 18px;
-    color: #222;
-    margin-bottom: 32px;
-    line-height: 1.5;
-  }
-  .shop-now-btn {
-    display: inline-block;
-    padding: 16px 40px;
-    background-color: #111;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 2px;
-    font-family: Jost, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    text-transform: uppercase;
-    transition: background 0.3s, color 0.3s, transform 0.3s;
-    border: none;
-    margin-top: 10px;
-  }
-  .shop-now-btn:hover,
-  .shop-now-btn.active {
-    background-color: #fff544;
-    color: #111;
-    transform: scale(1.08);
-  }
-  .banner-images img {
+  .banner-text-content {
     max-width: 100%;
-    height: auto;
+    text-align: center;
+    padding: 1.5rem;
   }
-  @media (max-width: 600px) {
-    .banner-topbar { flex-direction: column; height: auto; padding: 8px 8px; }
-    .banner-content { max-width: 100%; padding: 24px 8px; }
+  .vector-frame-2 {
+    /* Hide complex second vector on mobile for clarity */
+    display: none;
   }
+}

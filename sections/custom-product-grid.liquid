@@ -1,129 +1,104 @@
-{% schema %}
-{
-  "name": "Custom Product Grid",
-  "settings": [
-    { "type": "product", "id": "product_1", "label": "Select Product 1" },
-    { "type": "product", "id": "product_2", "label": "Select Product 2" },
-    { "type": "product", "id": "product_3", "label": "Select Product 3" },
-    { "type": "product", "id": "product_4", "label": "Select Product 4" },
-    { "type": "product", "id": "product_5", "label": "Select Product 5" },
-    { "type": "product", "id": "product_6", "label": "Select Product 6" }
-  ],
-  "presets": [
-    { "name": "Custom Product Grid", "category": "Custom" }
-  ]
-}
-{% endschema %}
+<link rel="stylesheet" href="{{ 'custom-grid.css' | asset_url }}">
 
-<div class="custom-product-grid">
-  <div class="grid-container">
+<div id="custom-product-grid" class="custom-product-grid-container" data-soft-jacket-handle="{{ settings.soft_winter_jacket.handle }}">
+  <h2 class="grid-title">{{ section.settings.title }}</h2>
+  
+  <div class="product-grid">
     {% for i in (1..6) %}
-      {% assign product_key = 'product_' | append: i %}
-      {% assign product_handle = section.settings[product_key] %}
-      {% assign product = all_products[product_handle] %}
-      {% if product %}
-        <div class="product-block" data-product-id="{{ product.id }}">
-          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-          <h3>{{ product.title }}</h3>
-          <p>{{ product.price | money }}</p>
-          <button class="view-details" data-product-id="{{ product.id }}">View Details</button>
+      {%- assign product_setting_key = 'product_' | append: i -%}
+      {%- assign selected_product = section.settings[product_setting_key] -%}
+      
+      {% if selected_product != blank %}
+        <div class="grid-item" role="button" tabindex="0" aria-label="View details for {{ selected_product.title }}" data-product-json="{{ selected_product | json | escape }}">
+          {% if selected_product.featured_image %}
+            {{ selected_product.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', class: 'grid-item-image' }}
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <div class="plus-icon-overlay">
+            <span>+</span>
+          </div>
+        </div>
+      {% else %}
+        {% comment %} Render a placeholder if no product is selected {% endcomment %}
+        <div class="grid-item-placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
         </div>
       {% endif %}
     {% endfor %}
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.view-details').forEach(button => {
-    button.addEventListener('click', function() {
-      const productId = this.getAttribute('data-product-id');
-      // Logic to open the popup and load product details
-      openProductPopup(productId);
-    });
-  });
+{% comment %}
+  ============================================================
+  POPUP MODAL HTML STRUCTURE
+  This is hidden by default with CSS and controlled by JavaScript.
+  ============================================================
+{% endcomment %}
+<div id="product-popup-modal" class="popup-overlay" aria-modal="true" role="dialog" style="display: none;">
+  <div class="popup-content">
+    <button type="button" class="popup-close-button" aria-label="Close">
+      &times;
+    </button>
+    <div class="popup-grid">
+      <div class="popup-image-wrapper">
+        <img id="popup-product-image" src="" alt="Product Image" loading="lazy">
+      </div>
+      <div class="popup-details-wrapper">
+        <h3 id="popup-product-title" class="popup-title"></h3>
+        <p id="popup-product-price" class="popup-price"></p>
+        <div id="popup-product-description" class="popup-description"></div>
+        
+        <form id="popup-add-to-cart-form">
+          <div id="popup-variant-options" class="variant-options">
+            {% comment %} Variant selectors will be dynamically inserted here by JavaScript {% endcomment %}
+          </div>
+          
+          <input type="hidden" name="id" id="popup-selected-variant-id">
+          
+          <button type="submit" id="popup-add-to-cart-button" class="add-to-cart-button">
+            <span class="button-text">Add to Cart</span>
+            <span class="button-arrow">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-  function openProductPopup(productId) {
-    // Fetch product details and display in popup
-    // Implement the popup functionality here
-  }
-});
-</script>
+<script src="{{ 'custom-grid.js' | asset_url }}" defer="defer"></script>
 
-<style>
-  .custom-product-grid {
-    width: 100%;
-    margin: 0 auto;
-    padding: 32px 0;
-    background: #fff;
-  }
-  .grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 24px 0;
-  }
-  .product-block {
-    width: calc(33.33% - 20px);
-    margin-bottom: 32px;
-    text-align: center;
-    box-sizing: border-box;
-    background: #fafafa;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    transition: box-shadow 0.2s;
-  }
-  .product-block:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  }
-  .product-block img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin-bottom: 12px;
-  }
-  .product-block h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 8px 0 4px 0;
-    color: #222;
-  }
-  .product-block p {
-    font-size: 16px;
-    color: #444;
-    margin-bottom: 12px;
-  }
-  .view-details {
-    background: #111;
-    color: #fff;
-    padding: 10px 28px;
-    border-radius: 2px;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s, transform 0.2s;
-  }
-  .view-details:hover {
-    background: #fff544;
-    color: #111;
-    transform: scale(1.05);
-  }
-  @media (max-width: 900px) {
-    .product-block {
-      width: calc(50% - 10px);
+{% schema %}
+{
+  "name": "Custom Product Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Tisso vison in the wild"
+    },
+    { "type": "product", "id": "product_1", "label": "Product 1" },
+    { "type": "product", "id": "product_2", "label": "Product 2" },
+    { "type": "product", "id": "product_3", "label": "Product 3" },
+    { "type": "product", "id": "product_4", "label": "Product 4" },
+    { "type": "product", "id": "product_5", "label": "Product 5" },
+    { "type": "product", "id": "product_6", "label": "Product 6" },
+    {
+      "type": "header",
+      "content": "Special Cart Rule"
+    },
+    {
+      "type": "product",
+      "id": "soft_winter_jacket",
+      "label": "Soft Winter Jacket",
+      "info": "Select the 'Soft Winter Jacket' product that will be auto-added to the cart."
     }
-  }
-  @media (max-width: 600px) {
-    .grid-container {
-      flex-direction: column;
-      gap: 0;
+  ],
+  "presets": [
+    { 
+      "name": "Custom Product Grid"
     }
-    .product-block {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-  }
-</style>
+  ]
+}
+{% endschema %}
