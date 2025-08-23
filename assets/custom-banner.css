@@ -28,8 +28,9 @@
 .logo-text {
   font-family: Avenir LT Std;
   font-weight: 750;
+  color: Black;
   font-style: 95 Black;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   letter-spacing: 0.05em;
 }
 .top-bar-promo-text {
