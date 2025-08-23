@@ -1,134 +1,104 @@
-<link rel="stylesheet" href="{{ 'custom-banner.css' | asset_url }}">
-<div class="custom-banner-container">
-  <!-- Top Bar -->
-  <div class="banner-top-bar">
-    <div class="top-bar-left">
-      <span class="logo-text">{{ section.settings.logo_text }}</span>
-    </div>
-    <div class="top-bar-center">
-      <span class="top-bar-promo-text">{{ section.settings.topbar_text }}</span>
-    </div>
-    <div class="top-bar-right">
-      <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link | default: '#custom-product-grid' }}">
-        {{ section.settings.choose_gift_text }} &rarr;
-      </a>
-    </div>
-  </div>
-  <!-- Main Content Area -->
-  <div class="banner-main-area">
-    <!-- Background Vector Images -->
-    <div class="banner-vectors-wrapper">
-      {% if section.settings.vector_frame_1 != blank %}
-        <img 
-          src="{{ section.settings.vector_frame_1 | image_url: width: 2000 }}" 
-          alt="Gift guide illustration background" 
-          class="vector-frame-1" 
-          loading="lazy"
-          width="2000"
-          height="{{ 2000 | divided_by: section.settings.vector_frame_1.aspect_ratio | round }}"
-        >
+<link rel="stylesheet" href="{{ 'custom-grid.css' | asset_url }}">
+
+<div id="custom-product-grid" class="custom-product-grid-container" data-soft-jacket-handle="{{ settings.soft_winter_jacket.handle }}">
+  <h2 class="grid-title">{{ section.settings.title }}</h2>
+  
+  <div class="product-grid">
+    {% for i in (1..6) %}
+      {%- assign product_setting_key = 'product_' | append: i -%}
+      {%- assign selected_product = section.settings[product_setting_key] -%}
+      
+      {% if selected_product != blank %}
+        <div class="grid-item" role="button" tabindex="0" aria-label="View details for {{ selected_product.title }}" data-product-json="{{ selected_product | json | escape }}">
+          {% if selected_product.featured_image %}
+            {{ selected_product.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', class: 'grid-item-image' }}
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <div class="plus-icon-overlay">
+            <span>+</span>
+          </div>
+        </div>
+      {% else %}
+        {% comment %} Render a placeholder if no product is selected {% endcomment %}
+        <div class="grid-item-placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
       {% endif %}
-      {% if section.settings.vector_frame_2 != blank %}
-        <img 
-          src="{{ section.settings.vector_frame_2 | image_url: width: 1200 }}" 
-          alt="Gift guide illustration accent" 
-          class="vector-frame-2"
-          loading="lazy"
-          width="1200"
-          height="{{ 1200 | divided_by: section.settings.vector_frame_2.aspect_ratio | round }}"
-        >
-      {% endif %}
-    </div>
-code
-Code
-<!-- Text and Button Content -->
-<div class="banner-text-content">
-  <h1>{{ section.settings.banner_title }}</h1>
-  <p>{{ section.settings.banner_description }}</p>
-  <a href="{{ section.settings.shop_now_link | default: '#custom-product-grid' }}" class="shop-now-btn">
-    {{ section.settings.shop_now_text }} &rarr;
-  </a>
-</div>
-  </div>
-  <!-- Bottom Footer Bar -->
-  <div class="banner-footer-bar">
-    <span>{{ section.settings.footer_text }}</span>
+    {% endfor %}
   </div>
 </div>
+
 {% comment %}
-The schema remains unchanged as it correctly defines all the necessary settings.
+  ============================================================
+  POPUP MODAL HTML STRUCTURE
+  This is hidden by default with CSS and controlled by JavaScript.
+  ============================================================
 {% endcomment %}
+<div id="product-popup-modal" class="popup-overlay" aria-modal="true" role="dialog" style="display: none;">
+  <div class="popup-content">
+    <button type="button" class="popup-close-button" aria-label="Close">
+      &times;
+    </button>
+    <div class="popup-grid">
+      <div class="popup-image-wrapper">
+        <img id="popup-product-image" src="" alt="Product Image" loading="lazy">
+      </div>
+      <div class="popup-details-wrapper">
+        <h3 id="popup-product-title" class="popup-title"></h3>
+        <p id="popup-product-price" class="popup-price"></p>
+        <div id="popup-product-description" class="popup-description"></div>
+        
+        <form id="popup-add-to-cart-form">
+          <div id="popup-variant-options" class="variant-options">
+            {% comment %} Variant selectors will be dynamically inserted here by JavaScript {% endcomment %}
+          </div>
+          
+          <input type="hidden" name="id" id="popup-selected-variant-id">
+          
+          <button type="submit" id="popup-add-to-cart-button" class="add-to-cart-button">
+            <span class="button-text">Add to Cart</span>
+            <span class="button-arrow">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'custom-grid.js' | asset_url }}" defer="defer"></script>
+
 {% schema %}
 {
-"name": "Custom Banner",
-"settings": [
-{
-"type": "text",
-"id": "logo_text",
-"label": "Logo text",
-"default": "TISSO VISON"
-},
-{
-"type": "text",
-"id": "topbar_text",
-"label": "Top Bar Text",
-"default": "Find the ideal gift for your loved ones"
-},
-{
-"type": "text",
-"id": "choose_gift_text",
-"label": "Choose Gift Button Text",
-"default": "CHOOSE GIFT"
-},
-{
-"type": "url",
-"id": "choose_gift_link",
-"label": "Choose Gift Button Link"
-},
-{
-"type": "text",
-"id": "banner_title",
-"label": "Banner Title",
-"default": "The Gift Guide"
-},
-{
-"type": "textarea",
-"id": "banner_description",
-"label": "Banner Description",
-"default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
-},
-{
-"type": "text",
-"id": "shop_now_text",
-"label": "Shop Now Button Text",
-"default": "SHOP NOW"
-},
-{
-"type": "url",
-"id": "shop_now_link",
-"label": "Shop Now Button Link"
-},
-{
-"type": "image_picker",
-"id": "vector_frame_1",
-"label": "Vector Frame 1 (Main Background)"
-},
-{
-"type": "image_picker",
-"id": "vector_frame_2",
-"label": "Vector Frame 2 (Bottom-Right Accent)"
-},
-{
-"type": "text",
-"id": "footer_text",
-"label": "Footer Text",
-"default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
-}
-],
-"presets": [
-{
-"name": "Custom Banner"
-}
-]
+  "name": "Custom Product Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Tisso vison in the wild"
+    },
+    { "type": "product", "id": "product_1", "label": "Product 1" },
+    { "type": "product", "id": "product_2", "label": "Product 2" },
+    { "type": "product", "id": "product_3", "label": "Product 3" },
+    { "type": "product", "id": "product_4", "label": "Product 4" },
+    { "type": "product", "id": "product_5", "label": "Product 5" },
+    { "type": "product", "id": "product_6", "label": "Product 6" },
+    {
+      "type": "header",
+      "content": "Special Cart Rule"
+    },
+    {
+      "type": "product",
+      "id": "soft_winter_jacket",
+      "label": "Soft Winter Jacket",
+      "info": "Select the 'Soft Winter Jacket' product that will be auto-added to the cart."
+    }
+  ],
+  "presets": [
+    { 
+      "name": "Custom Product Grid"
+    }
+  ]
 }
 {% endschema %}

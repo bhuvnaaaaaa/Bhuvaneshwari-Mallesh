@@ -1,265 +1,134 @@
-/* --- Main Banner Container --- */
-.custom-banner-container {
-  position: relative;
-  width: 100%;
-  background-color: #fff;
-  border: 2px solid #000;
-  box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 90vh; /* Ensures banner has height */
+<link rel="stylesheet" href="{{ 'custom-banner.css' | asset_url }}">
+<div class="custom-banner-container">
+  <!-- Top Bar -->
+  <div class="banner-top-bar">
+    <div class="top-bar-left">
+      <span class="logo-text">{{ section.settings.logo_text }}</span>
+    </div>
+    <div class="top-bar-center">
+      <span class="top-bar-promo-text">{{ section.settings.topbar_text }}</span>
+    </div>
+    <div class="top-bar-right">
+      <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link | default: '#custom-product-grid' }}">
+        {{ section.settings.choose_gift_text }} &rarr;
+      </a>
+    </div>
+  </div>
+  <!-- Main Content Area -->
+  <div class="banner-main-area">
+    <!-- Background Vector Images -->
+    <div class="banner-vectors-wrapper">
+      {% if section.settings.vector_frame_1 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_1 | image_url: width: 2000 }}" 
+          alt="Gift guide illustration background" 
+          class="vector-frame-1" 
+          loading="lazy"
+          width="2000"
+          height="{{ 2000 | divided_by: section.settings.vector_frame_1.aspect_ratio | round }}"
+        >
+      {% endif %}
+      {% if section.settings.vector_frame_2 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_2 | image_url: width: 1200 }}" 
+          alt="Gift guide illustration accent" 
+          class="vector-frame-2"
+          loading="lazy"
+          width="1200"
+          height="{{ 1200 | divided_by: section.settings.vector_frame_2.aspect_ratio | round }}"
+        >
+      {% endif %}
+    </div>
+code
+Code
+<!-- Text and Button Content -->
+<div class="banner-text-content">
+  <h1>{{ section.settings.banner_title }}</h1>
+  <p>{{ section.settings.banner_description }}</p>
+  <a href="{{ section.settings.shop_now_link | default: '#custom-product-grid' }}" class="shop-now-btn">
+    {{ section.settings.shop_now_text }} &rarr;
+  </a>
+</div>
+  </div>
+  <!-- Bottom Footer Bar -->
+  <div class="banner-footer-bar">
+    <span>{{ section.settings.footer_text }}</span>
+  </div>
+</div>
+{% comment %}
+The schema remains unchanged as it correctly defines all the necessary settings.
+{% endcomment %}
+{% schema %}
+{
+"name": "Custom Banner",
+"settings": [
+{
+"type": "text",
+"id": "logo_text",
+"label": "Logo text",
+"default": "TISSO VISON"
+},
+{
+"type": "text",
+"id": "topbar_text",
+"label": "Top Bar Text",
+"default": "Find the ideal gift for your loved ones"
+},
+{
+"type": "text",
+"id": "choose_gift_text",
+"label": "Choose Gift Button Text",
+"default": "CHOOSE GIFT"
+},
+{
+"type": "url",
+"id": "choose_gift_link",
+"label": "Choose Gift Button Link"
+},
+{
+"type": "text",
+"id": "banner_title",
+"label": "Banner Title",
+"default": "The Gift Guide"
+},
+{
+"type": "textarea",
+"id": "banner_description",
+"label": "Banner Description",
+"default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+},
+{
+"type": "text",
+"id": "shop_now_text",
+"label": "Shop Now Button Text",
+"default": "SHOP NOW"
+},
+{
+"type": "url",
+"id": "shop_now_link",
+"label": "Shop Now Button Link"
+},
+{
+"type": "image_picker",
+"id": "vector_frame_1",
+"label": "Vector Frame 1 (Main Background)"
+},
+{
+"type": "image_picker",
+"id": "vector_frame_2",
+"label": "Vector Frame 2 (Bottom-Right Accent)"
+},
+{
+"type": "text",
+"id": "footer_text",
+"label": "Footer Text",
+"default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
 }
-
-/* --- Top Bar --- */
-.banner-top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2.5rem;
-  border-bottom: 2px solid #000;
-  flex-shrink: 0; /* Prevents the top bar from shrinking */
+],
+"presets": [
+{
+"name": "Custom Banner"
 }
-.top-bar-left, .top-bar-center, .top-bar-right {
-  flex: 1;
+]
 }
-.top-bar-center { text-align: center; }
-.top-bar-right { text-align: right; }
-.logo-text {
-  font-family: sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: 0.05em;
-}
-.top-bar-promo-text {
-  font-family: serif;
-  font-size: 1rem;
-}
-
-/* --- Main Content Area --- */
-.banner-main-area {
-  position: relative;
-  flex-grow: 1; /* Allows this area to fill available space */
-  display: flex;
-  align-items: center;
-}
-
-/* --- Vector Image Positioning --- */
-.banner-vectors-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Allows clicks to go through to content */
-  /* This clips the container, creating a blank space on the left for the text */
-  clip-path: inset(0 0 0 38%);
-}
-.vector-frame-1 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%; /* Confine to top half */
-  object-fit: cover;
-  object-position: 0% 50%; /* Aligns image within its frame */
-  z-index: 1;
-}
-.vector-frame-2 {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 50%; /* Confine to bottom half */
-  object-fit: cover;
-  object-position: 0% 50%; /* Aligns image within its frame */
-  z-index: 1;
-}
-
-/* --- Text Content --- */
-.banner-text-content {
-  position: relative;
-  z-index: 3; /* Sits on top of all vectors */
-  max-width: 35rem;
-  width: 40%; /* Occupy the left side */
-  padding: 2rem 2.5rem;
-  text-align: left;
-}
-.banner-text-content h1 {
-  font-family: Jost;
-  font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive font size */
-  font-style: Medium;
-  font-weight: 500;
-  line-height: 1.1;
-  color: #000;
-  vertical-align: middle;
-  margin: 0 0 1.5rem 0;
-}
-.banner-text-content p {
-  font-family: Jost;
-  font-size: 1.125rem;
-  font-style: Regular;
-  font-weight: 400;
-  line-height: 1.6;
-  color: #333;
-  vertical-align: middle;
-  margin: 0 0 2rem 0;
-}
-
-/* --- Buttons & Hover Transitions --- */
-.choose-gift-btn,
-.shop-now-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-  font-family: sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  text-transform: uppercase;
-  border: 2px solid #000;
-  cursor: pointer;
-  /* THE SMOOTH TRANSITION */
-  transition: background-color 0.4s ease-out, color 0.4s ease-out, transform 0.2s ease-out;
-}
-.choose-gift-btn {
-  background-color:rgb(255, 217, 0); /* Figma Yellow */
-  color: #111;
-  padding: 0.75rem 1.5rem;
-}
-.shop-now-btn {
-  background-color: #111;
-  color: #fff;
-  padding: 1rem 2.5rem;
-}
-
-/* HOVER STATES */
-.choose-gift-btn:hover {
-  background-color: #111;
-  color:rgb(255, 217, 0);
-  transform: translateY(-3px); /* Button lift effect */
-}
-.shop-now-btn:hover {
-  background-color:rgb(255, 217, 0);
-  color: #111;
-  transform: translateY(-3px);
-}
-
-/* --- Bottom Footer Bar --- */
-.banner-footer-bar {
-  text-align: center;
-  padding: 1rem 2.5rem;
-  border-top: 2px solid #000;
-  font-size: 0.8rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-weight: 500;
-  flex-shrink: 0;
-}
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-  /* On mobile, revert to the original full-background style */
-  .banner-vectors-wrapper {
-      clip-path: none; /* Remove the clipping */
-  }
-  .vector-frame-1 {
-      height: 100%;
-      opacity: 0.1; /* Make it faint behind text */
-  }
-  .banner-text-content {
-      width: 100%;
-      max-width: 100%;
-      background: rgba(255,255,255,0.8); /* Add background for readability */
-      padding: 1.5rem;
-  }
-  
-  .banner-top-bar {
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-  }
-  .top-bar-center { order: -1; } /* Move promo text to top */
-  .banner-main-area {
-    align-items: flex-start;
-    padding-top: 2rem;
-  }
-
-  .topbar-text {
-    font-size: 15px;
-    color: #222;
-  }
-  .choose-gift-btn {
-    background:rgb(255, 242, 0);
-    color: #111;
-    padding: 12px 32px;
-    border-radius: 2px;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 16px;
-    border: none;
-    transition: background 0.3s, color 0.3s, transform 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .choose-gift-btn:hover,
-  .choose-gift-btn.active {
-    background: #111;
-    color:rgb(255, 242, 0);
-    transform: scale(1.08);
-  }
-  .banner-content {
-    padding: 40px 20px 20px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    background: rgba(255,255,255,0.95);
-    position: relative;
-    z-index: 2;
-    text-align: left;
-  }
-  .banner-text-content h1 { /* Adjusted from .banner-content to match HTML */
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: #111;
-    letter-spacing: -1px;
-  }
-  .banner-text-content p { /* Adjusted from .banner-content to match HTML */
-    font-size: 18px;
-    color: #222;
-    margin-bottom: 32px;
-    line-height: 1.5;
-  }
-  .shop-now-btn {
-    display: inline-block;
-    padding: 16px 40px;
-    background-color: #111;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 2px;
-    font-family: Jost, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    text-transform: uppercase;
-    transition: background 0.3s, color 0.3s, transform 0.3s;
-    border: none;
-    margin-top: 10px;
-  }
-  .shop-now-btn:hover,
-  .shop-now-btn.active {
-    background-color:rgb(255, 242, 0);
-    color: #111;
-    transform: scale(1.08);
-  }
-  .banner-images img {
-    max-width: 100%;
-    text-align: center;
-    padding: 1.5rem;
-  }
-  .vector-frame-2 {
-    /* Hide complex second vector on mobile for clarity */
-    display: none;
-  }
-}
+{% endschema %}

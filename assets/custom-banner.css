@@ -52,24 +52,28 @@
   width: 100%;
   height: 100%;
   pointer-events: none; /* Allows clicks to go through to content */
+  /* This clips the container, creating a blank space on the left for the text */
+  clip-path: inset(0 0 0 38%);
 }
 .vector-frame-1 {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
+  height: 50%; /* Confine to top half */
+  object-fit: cover;
+  object-position: 0% 50%; /* Aligns image within its frame */
   z-index: 1;
 }
 .vector-frame-2 {
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 100%; /* Covers bottom-right quadrant */
-  height: auto;
-  z-index: 2; /* Sits on top of the first vector */
-  -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
-  mask-image: linear-gradient(to top, black 50%, transparent 100%);
+  left: 0;
+  width: 100%;
+  height: 50%; /* Confine to bottom half */
+  object-fit: cover;
+  object-position: 0% 50%; /* Aligns image within its frame */
+  z-index: 1;
 }
 
 /* --- Text Content --- */
@@ -77,6 +81,7 @@
   position: relative;
   z-index: 3; /* Sits on top of all vectors */
   max-width: 35rem;
+  width: 40%; /* Occupy the left side */
   padding: 2rem 2.5rem;
   text-align: left;
 }
@@ -154,6 +159,21 @@
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
+  /* On mobile, revert to the original full-background style */
+  .banner-vectors-wrapper {
+      clip-path: none; /* Remove the clipping */
+  }
+  .vector-frame-1 {
+      height: 100%;
+      opacity: 0.1; /* Make it faint behind text */
+  }
+  .banner-text-content {
+      width: 100%;
+      max-width: 100%;
+      background: rgba(255,255,255,0.8); /* Add background for readability */
+      padding: 1.5rem;
+  }
+  
   .banner-top-bar {
     flex-direction: column;
     gap: 0.5rem;
@@ -164,8 +184,6 @@
     align-items: flex-start;
     padding-top: 2rem;
   }
-
-  .banner-text-content {
 
   .topbar-text {
     font-size: 15px;
@@ -201,22 +219,18 @@
     z-index: 2;
     text-align: left;
   }
-  .banner-content h1 {
+  .banner-text-content h1 { /* Adjusted from .banner-content to match HTML */
     font-size: 48px;
     font-weight: 700;
     margin-bottom: 24px;
     color: #111;
     letter-spacing: -1px;
-    position: relative;
-    top: 800;
   }
-  .banner-content p {
+  .banner-text-content p { /* Adjusted from .banner-content to match HTML */
     font-size: 18px;
     color: #222;
     margin-bottom: 32px;
     line-height: 1.5;
-    position: relative;
-    bottom:0;
   }
   .shop-now-btn {
     display: inline-block;
