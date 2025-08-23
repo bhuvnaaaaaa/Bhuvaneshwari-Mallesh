@@ -1,207 +1,204 @@
-// This file contains the JavaScript functionality for the product grid, including the logic for displaying products and handling the popup functionality.
+document.addEventListener('DOMContentLoaded', () => {
+  // --- DOM Element Selectors ---
+  const gridContainer = document.querySelector('.custom-product-grid-container');
+  const modal = document.getElementById('product-popup-modal');
+  if (!gridContainer || !modal) return; // Exit if essential elements are missing
 
-/* assets/custom-grid.js
-   Vanilla JS: product popup + dynamic variants + add-to-cart + auto-add jacket rule
-   Required DOM:
-   - product blocks: .product-block with attributes:
-       data-product-id, data-product-name, data-product-price, data-product-description,
-       data-product-variants (product.variants | json from Liquid)
-     and must contain an <img> inside (featured image).
-   - single popup:
-     <div class="product-popup"> ... children: .popup-overlay, .popup-close,
-         .product-image, .product-name, .product-price, .product-description,
-         .product-variants (select), .add-to-cart-button
-     </div>
-*/
+  const grid = gridContainer.querySelector('.product-grid');
+  const closeButton = modal.querySelector('.popup-close-button');
+  const form = modal.querySelector('#popup-add-to-cart-form');
+  
+  // --- State Variable ---
+  let currentProductData = null;
 
-(function () {
-  // === CONFIG - update this handle if your jacket has a different handle ===
-  var SOFT_JACKET_HANDLE = 'soft-winter-jacket'; // <-- replace with the real handle if different
-
-  // --- helpers ---
-  function tryParseJSON(str) {
-    if (!str) return null;
-    try { return JSON.parse(str); } catch (e) {
-      // attempt to unescape common HTML entities then parse
-      var unescaped = str
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>');
-      try { return JSON.parse(unescaped); } catch (e2) { return null; }
-    }
-  }
-
-  function addToCartVariant(variantId, qty) {
-    return fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: qty || 1 })
-    })
-    .then(function (res) {
-      if (!res.ok) return res.json().then(function (err) { throw err; });
-      return res.json();
-    });
-  }
-
-  function fetchProductByHandle(handle) {
-    return fetch('/products/' + encodeURIComponent(handle) + '.js')
-      .then(function (res) {
-        if (!res.ok) throw new Error('Product fetch failed for ' + handle);
-        return res.json();
-      });
-  }
-
-  // --- DOM elements ---
-  var popup = document.querySelector('.product-popup');
-  if (!popup) {
-    console.warn('custom-grid.js: .product-popup element not found — popup will not work.');
-    return;
-  }
-  var popupOverlay = popup.querySelector('.popup-overlay');
-  var popupClose = popup.querySelector('.popup-close');
-  var popupImage = popup.querySelector('.product-image');
-  var popupName = popup.querySelector('.product-name');
-  var popupPrice = popup.querySelector('.product-price');
-  var popupDescription = popup.querySelector('.product-description');
-  var popupVariantsSelect = popup.querySelector('.product-variants');
-  var popupAddBtn = popup.querySelector('.add-to-cart-button');
-
-  if (!popupVariantsSelect || !popupAddBtn) {
-    console.warn('custom-grid.js: required popup children (.product-variants or .add-to-cart-button) missing.');
-  }
-
-  // utility to open/close
-  function showPopup() { popup.classList.remove('hidden'); popup.classList.add('active'); document.body.style.overflow = 'hidden'; }
-  function hidePopup() { popup.classList.add('hidden'); popup.classList.remove('active'); document.body.style.overflow = ''; }
-
-  popupOverlay && popupOverlay.addEventListener('click', hidePopup);
-  popupClose && popupClose.addEventListener('click', hidePopup);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hidePopup(); });
-
-  // --- render popup for a product block ---
-  function openPopupFromBlock(block) {
-    // read data from block
-    var name = block.getAttribute('data-product-name') || '';
-    var price = block.getAttribute('data-product-price') || '';
-    var desc = block.getAttribute('data-product-description') || '';
-    var variantsJson = block.getAttribute('data-product-variants') || '';
-    var imgEl = block.querySelector('img');
-    var imageSrc = imgEl ? imgEl.src : '';
-
-    // parse variants safely
-    var variants = tryParseJSON(variantsJson) || [];
-    // Normalize variant objects into { id, title, options: [] }
-    variants = variants.map(function (v) {
-      var opts = [];
-      // support both .options array (Shopify API) or option1/2/3 properties (Liquid)
-      if (Array.isArray(v.options) && v.options.length) {
-        opts = v.options;
-      } else {
-        if (v.option1) opts.push(v.option1);
-        if (v.option2) opts.push(v.option2);
-        if (v.option3) opts.push(v.option3);
+  // --- Main Event Listener for Grid Clicks (Event Delegation) ---
+  grid.addEventListener('click', (event) => {
+    const gridItem = event.target.closest('.grid-item');
+    if (gridItem) {
+      const productJson = gridItem.dataset.productJson;
+      if (productJson) {
+        currentProductData = JSON.parse(productJson);
+        openPopup();
       }
-      return {
-        id: v.id,
-        title: v.title || (opts.join(' / ') || ''),
-        price: v.price || v.price_including_tax || null,
-        options: opts
-      };
+    }
+  });
+  
+  // --- Popup Functions ---
+  function openPopup() {
+    if (!currentProductData) return;
+    
+    // 1. Populate static content
+    modal.querySelector('#popup-product-title').textContent = currentProductData.title;
+    modal.querySelector('#popup-product-image').src = currentProductData.featured_image || '';
+    modal.querySelector('#popup-product-description').innerHTML = currentProductData.description;
+    
+    // 2. Render variant options dynamically
+    renderVariantSelectors();
+    
+    // 3. Set initial state (price, button)
+    updateVariantState();
+    
+    // 4. Show the modal
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('is-visible'), 10); // For transition
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+  }
+  
+  function closePopup() {
+    modal.classList.remove('is-visible');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300); // Match CSS transition duration
+  }
+  
+  // --- Dynamic Variant Rendering ---
+  function renderVariantSelectors() {
+    const optionsContainer = modal.querySelector('#popup-variant-options');
+    optionsContainer.innerHTML = ''; // Clear previous options
+    
+    currentProductData.options_with_values.forEach((option, index) => {
+      const fieldset = document.createElement('fieldset');
+      fieldset.classList.add('variant-fieldset');
+      
+      const legend = document.createElement('legend');
+      legend.classList.add('variant-legend');
+      legend.textContent = option.name;
+      fieldset.appendChild(legend);
+
+      // Render as buttons for the first option (e.g., Color), dropdown for others
+      if (index === 0) {
+        const buttonsWrapper = document.createElement('div');
+        buttonsWrapper.classList.add('variant-buttons');
+        option.values.forEach((value, valueIndex) => {
+          const inputId = `option-${index}-${valueIndex}`;
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.id = inputId;
+          input.name = `option-${index}`;
+          input.value = value;
+          input.classList.add('variant-radio-input');
+          if (valueIndex === 0) input.checked = true; // Pre-select first option
+          
+          const label = document.createElement('label');
+          label.htmlFor = inputId;
+          label.textContent = value;
+          label.classList.add('variant-radio-label');
+          
+          buttonsWrapper.appendChild(input);
+          buttonsWrapper.appendChild(label);
+        });
+        fieldset.appendChild(buttonsWrapper);
+      } else {
+        const selectWrapper = document.createElement('div');
+        selectWrapper.classList.add('variant-select-wrapper');
+        const select = document.createElement('select');
+        select.name = `option-${index}`;
+        select.classList.add('variant-select');
+        option.values.forEach(value => {
+            const optionElement = document.createElement('option');
+            optionElement.value = value;
+            optionElement.textContent = value;
+            select.appendChild(optionElement);
+        });
+        selectWrapper.appendChild(select);
+        fieldset.appendChild(selectWrapper);
+      }
+      optionsContainer.appendChild(fieldset);
     });
 
-    // fill popup fields
-    popupName.textContent = name;
-    popupPrice.textContent = price;
-    popupDescription.textContent = desc;
-    popupImage && (popupImage.src = imageSrc);
-
-    // populate variants select
-    if (popupVariantsSelect) {
-      popupVariantsSelect.innerHTML = ''; // reset
-      variants.forEach(function (v, idx) {
-        var opt = document.createElement('option');
-        opt.value = String(v.id);
-        opt.textContent = v.title || v.options.join(' / ');
-        popupVariantsSelect.appendChild(opt);
-      });
-      // store variants for later use on the add click
-      popupVariantsSelect._variants = variants;
-    }
-
-    // show
-    showPopup();
+    // Add change listeners to new inputs
+    optionsContainer.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('change', updateVariantState);
+    });
   }
 
-  // Attach click handlers on product blocks
-  document.querySelectorAll('.product-block').forEach(function (block) {
-    // prefer the small + button if exists
-    var btn = block.querySelector('.view-details');
-    if (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        openPopupFromBlock(block);
-      });
+  // --- State Update and Cart Logic ---
+  function updateVariantState() {
+    const selectedOptions = Array.from(
+      modal.querySelectorAll('#popup-variant-options input:checked, #popup-variant-options select')
+    ).map(el => el.value);
+    
+    const selectedVariant = currentProductData.variants.find(variant => {
+      return variant.options.every((option, index) => option === selectedOptions[index]);
+    });
+    
+    const priceEl = modal.querySelector('#popup-product-price');
+    const buttonEl = modal.querySelector('#popup-add-to-cart-button');
+    const variantIdEl = modal.querySelector('#popup-selected-variant-id');
+    const buttonTextEl = buttonEl.querySelector('.button-text');
+    
+    if (selectedVariant) {
+      priceEl.textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(selectedVariant.price / 100);
+      variantIdEl.value = selectedVariant.id;
+      if (selectedVariant.available) {
+        buttonEl.disabled = false;
+        buttonTextEl.textContent = 'Add to Cart';
+      } else {
+        buttonEl.disabled = true;
+        buttonTextEl.textContent = 'Sold Out';
+      }
     } else {
-      // fallback: clicking the block opens popup
-      block.addEventListener('click', function () { openPopupFromBlock(block); });
+      buttonEl.disabled = true;
+      buttonTextEl.textContent = 'Unavailable';
     }
-  });
+  }
+  
+  async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const variantId = form.querySelector('#popup-selected-variant-id').value;
+    if (!variantId) return;
 
-  // Add to cart logic
-  popupAddBtn && popupAddBtn.addEventListener('click', function () {
-    var selectedVariantId = popupVariantsSelect && popupVariantsSelect.value;
-    if (!selectedVariantId) {
-      alert('Please select a variant.');
-      return;
-    }
+    const button = form.querySelector('#popup-add-to-cart-button');
+    button.disabled = true;
+    button.querySelector('.button-text').textContent = 'Adding...';
 
-    popupAddBtn.disabled = true;
-    popupAddBtn.textContent = 'Adding...';
+    let itemsToAdd = [{ id: variantId, quantity: 1 }];
 
-    addToCartVariant(selectedVariantId, 1)
-      .then(function (added) {
-        // added is the cart item object returned by Shopify
-        // Now check the added variant options (we can find it from the popupVariantsSelect._variants)
-        var variants = (popupVariantsSelect && popupVariantsSelect._variants) || [];
-        var chosen = variants.find(function (v) { return String(v.id) === String(selectedVariantId); }) || null;
-        var optionValues = (chosen && chosen.options || []).map(function (o) { return (o||'').toString().toLowerCase(); });
-
-        // Check for Black + Medium (case-insensitive)
-        if (optionValues.indexOf('black') !== -1 && optionValues.indexOf('medium') !== -1) {
-          // fetch jacket product then add its first variant
-          fetchProductByHandle(SOFT_JACKET_HANDLE)
-            .then(function (jprod) {
-              if (jprod && Array.isArray(jprod.variants) && jprod.variants.length) {
-                var jacketVariantId = jprod.variants[0].id;
-                return addToCartVariant(jacketVariantId, 1);
-              } else {
-                console.warn('Soft jacket product has no variants or failed to load.');
-              }
-            })
-            .catch(function (err) {
-              console.warn('Failed to auto-add soft jacket:', err);
-            })
-            .finally(function () {
-              popupAddBtn.disabled = false;
-              popupAddBtn.textContent = 'Add to Cart';
-              hidePopup();
-              // Optionally show cart/notification here
-            });
-        } else {
-          popupAddBtn.disabled = false;
-          popupAddBtn.textContent = 'Add to Cart';
-          hidePopup();
+    // --- SPECIAL CART RULE LOGIC ---
+    const selectedVariant = currentProductData.variants.find(v => v.id == variantId);
+    const softJacketHandle = gridContainer.dataset.softJacketHandle;
+    
+    if (selectedVariant && softJacketHandle && selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'M') {
+      try {
+        const res = await fetch(`/products/${softJacketHandle}.js`);
+        const jacketData = await res.json();
+        const jacketVariantId = jacketData.variants.find(v => v.available)?.id;
+        if (jacketVariantId) {
+          itemsToAdd.push({ id: jacketVariantId, quantity: 1 });
         }
-      })
-      .catch(function (err) {
-        var msg = (err && err.description) ? err.description : (err && err.message) ? err.message : 'Add to cart failed';
-        console.error('Add to cart error:', err);
-        alert('Add to cart failed: ' + msg);
-        popupAddBtn.disabled = false;
-        popupAddBtn.textContent = 'Add to Cart';
+      } catch (e) {
+        console.error("Could not fetch special product:", e);
+      }
+    }
+    
+    // --- Add to Cart API Call ---
+    try {
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: itemsToAdd })
       });
-  });
+      closePopup();
+      // Optional: update cart count or show a success notification
+    } catch (e) {
+      console.error("Error adding to cart:", e);
+      button.querySelector('.button-text').textContent = 'Error!';
+    } finally {
+        // Re-enable button after a delay
+        setTimeout(() => {
+            if(!button.disabled){
+                button.disabled = false;
+            }
+        }, 1000);
+    }
+  }
 
-})();
+  // --- Attach Event Listeners ---
+  closeButton.addEventListener('click', closePopup);
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closePopup(); // Close if clicking on the overlay
+  });
+  form.addEventListener('submit', handleFormSubmit);
+});

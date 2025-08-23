@@ -1,3 +1,66 @@
+<link rel="stylesheet" href="{{ 'custom-banner.css' | asset_url }}">
+
+<div class="custom-banner-container">
+  <!-- Top Bar -->
+  <div class="banner-top-bar">
+    <div class="top-bar-left">
+      <span class="logo-text">{{ section.settings.logo_text }}</span>
+    </div>
+    <div class="top-bar-center">
+      <span class="top-bar-promo-text">{{ section.settings.topbar_text }}</span>
+    </div>
+    <div class="top-bar-right">
+      <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link | default: '#custom-product-grid' }}">
+        {{ section.settings.choose_gift_text }} &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="banner-main-area">
+    <!-- Background Vector Images -->
+    <div class="banner-vectors-wrapper">
+      {% if section.settings.vector_frame_1 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_1 | image_url: width: 2000 }}" 
+          alt="Gift guide illustration background" 
+          class="vector-frame-1" 
+          loading="lazy"
+          width="2000"
+          height="{{ 2000 | divided_by: section.settings.vector_frame_1.aspect_ratio | round }}"
+        >
+      {% endif %}
+      {% if section.settings.vector_frame_2 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_2 | image_url: width: 1200 }}" 
+          alt="Gift guide illustration accent" 
+          class="vector-frame-2"
+          loading="lazy"
+          width="1200"
+          height="{{ 1200 | divided_by: section.settings.vector_frame_2.aspect_ratio | round }}"
+        >
+      {% endif %}
+    </div>
+
+    <!-- Text and Button Content -->
+    <div class="banner-text-content">
+      <h1>{{ section.settings.banner_title }}</h1>
+      <p>{{ section.settings.banner_description }}</p>
+      <a href="{{ section.settings.shop_now_link | default: '#custom-product-grid' }}" class="shop-now-btn">
+        {{ section.settings.shop_now_text }} &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Footer Bar -->
+  <div class="banner-footer-bar">
+    <span>{{ section.settings.footer_text }}</span>
+  </div>
+</div>
+
+{% comment %}
+  The schema remains unchanged as it correctly defines all the necessary settings.
+{% endcomment %}
 {% schema %}
 {
   "name": "Custom Banner",
@@ -13,6 +76,7 @@
       "id": "topbar_text",
       "label": "Top Bar Text",
       "default": "Find the ideal gift for your loved ones"
+      "default": "Find the ideal gift for your loved ones"
     },
     {
       "type": "text",
@@ -23,8 +87,7 @@
     {
       "type": "url",
       "id": "choose_gift_link",
-      "label": "Choose Gift Button Link",
-      "default": "/"
+      "label": "Choose Gift Button Link"
     },
     {
       "type": "text",
@@ -47,18 +110,17 @@
     {
       "type": "url",
       "id": "shop_now_link",
-      "label": "Shop Now Button Link",
-      "default": "/"
+      "label": "Shop Now Button Link"
     },
     {
       "type": "image_picker",
       "id": "vector_frame_1",
-      "label": "Vector Frame 1 "
+      "label": "Vector Frame 1 (Main Background)"
     },
     {
       "type": "image_picker",
       "id": "vector_frame_2",
-      "label": "Vector Frame 2"
+      "label": "Vector Frame 2 (Bottom-Right Accent)"
     },
     {
       "type": "text",
@@ -69,262 +131,8 @@
   ],
   "presets": [
     {
-      "name": "Custom Banner",
-      "category": "Custom"
+      "name": "Custom Banner"
     }
   ]
 }
 {% endschema %}
-
-<div class="custom-banner">
-  <!-- Top Bar -->
-  <div class="banner-topbar">
-    <span class="logo_text">{{ section.settings.logo_text }}</span>
-    <span class="topbar-text">{{ section.settings.topbar_text }}</span>
-    <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link }} ">{{ section.settings.choose_gift_text }}</a> 
-  </div>
-  <!-- Banner Main -->
-  <div class="banner-main">
-    <div class="banner-vectors">
-      {% if section.settings.vector_frame_1 != blank %}
-        <img src="{{ section.settings.vector_frame_1 | image_url: width: 1000, height: 600 }}" alt="Vector Frame 1" class="vector-frame-1" />
-      {% endif %}
-      {% if section.settings.vector_frame_2 != blank %}
-        <img src="{{ section.settings.vector_frame_2 | image_url: width: 900, height: 800 }}" alt="Vector Frame 2" class="vector-frame-2" />
-      {% endif %}
-    </div>
-    <div class="banner-content">
-      <h1>{{ section.settings.banner_title }}</h1>
-      <p>{{ section.settings.banner_description }}</p>
-      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">{{ section.settings.shop_now_text }} </a>
-    </div>
-  </div> 
-  <div class="banner-footer-text">
-    {{ section.settings.footer_text }}
-  </div>
-</div>
-
-<style>
-.custom-banner {
-  width: 100%;
-  background: #fff;
-  position: relative;
-  overflow: hidden;
-  font-family: Avenir LT Std, Jost;
-}
-.banner-topbar {
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-  height: 64px;
-  box-sizing: border-box;
-}
-.logo_text {
-  font-family: Avenir LT Std;
-  font-weight: 750;
-  font-style: 95 Black;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: 0%;
-  text-transform: uppercase;
-
-}
-.topbar-text {
-  font-style: Lustria;
-  font-weight: 400;
-  font-style: Regular;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0px;
-  vertical-align: middle;
-
-}
-.choose-gift-btn {
-  font-family: Jost;
-  font-style: Regular;
-  font-family: Jost;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 20.48px;
-  letter-spacing: 0px;
-  background: #fff544;
-  color: #111;
-  padding: 12px 32px;
-  border-radius: 2px;
-  font-weight: 600;
-  text-decoration: none;
-  text-transform: uppercase;
-  border: none;
-  transition: background 0.3s, color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-}
-.choose-gift-btn:hover {
-  background: #111;
-  color: #fff544;
-  transition: 0.4s ease;
-}
-.banner-main {
-  position: bottom;
-  width: 100%;
-  min-height: 500px;
-  display: flex;
-  align-items: stretch;
-  justify-content: flex-start;
-  background: #fff;
-  font-family: Jost;
-  font-style: Medium;
-  font-size: 70px;
-  leading-trim: NONE;
-  line-height: 100%;
-  letter-spacing: 0px;
-  vertical-align: middle;
-}
-.banner-vectors {
-  position: absolute;
-  inset: 0; /* cover full banner */
-  pointer-events: none;
-  z-index: 1;
-}
-
-.vector-frame-1 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 340px;
-  margin top: 32px;
-}
-
-.vector-frame-2 {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 700px;
-  height: -400px;
-  background-position: center bottom;
-  margin bottom: 10px;
-}
-
-.banner-content {
-  font-family: Jost;
-  font-style: Medium;
-  font-size: 70px;
-  position: relative;
-  z-index: 2;
-  margin: 60px 0 60px 60px;
-  max-width: 600px;
-  border-radius: 0;
-  box-shadow: none;
-  text-align: left;
-}
-.banner-content h1 {
-  font-size: 56px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #111;
-  letter-spacing: -1px;
-  vertical-align: middle;
-  position: relative;
-  
-
-}
-.banner-content p {
-  font-size: 18px;
-  color: #222;
-  margin-bottom: 32px;
-  line-height: 1.5;
-  vertical-align: middle;
-  position: relative;
-}
-.shop-now-btn {
-  font-family: Jost;
-  font-style: Regular;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 20.48px;
-  letter-spacing: 0px;
-  text-align: center;
-  text-transform: uppercase;
-  background: #111;
-  color: #fff;
-  padding: 16px 40px;
-  border-radius: 2px;
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  transition: background 0.3s, color 0.3s;
-  display: inline-block;
-}
-.shop-now-btn:hover,
-.shop-now-btn:focus {
-  background: #fff544;
-  color: #111;
-  transition: 0.4s ease;
-}
-.banner-footer-text {
-  width: 100%;
-  text-align: center;
-  font-size: 16px;
-  color: #222;
-  background: #fff;
-  border-top: 1px solid #e5e5e5;
-  padding: 10px 0 10px 0;
-  font-family: Jost;
-  font-weight: 400;
-  font-style: Regular;
-  font-size: 16px;
-  line-height: 13.42px;
-  letter-spacing: 0px;
-  text-align: center;
-  vertical-align: middle;
-}
-@media (max-width: 600px) {
-  .banner-footer-text {
-    font-size: 12px;
-    padding: 8px 0;
-  }
-}
-@media (max-width: 900px) {
-  .banner-content h1 { font-size: 36px; }
-  .banner-content { padding: 40px 16px 24px 16px; margin: 24px 0 24px 0; }
-  .vector-frame-1, .vector-frame-2 { min-width: 120px; }
-}
-@media (max-width: 600px) {
-  .banner-topbar { flex-direction: column; height: auto; padding: 8px 8px; }
-  .banner-content { max-width: 100%; margin: 16px 0; padding: 24px 8px; }
-  .banner-main { min-height: 350px; }
-  .vector-frame-1, .vector-frame-2 { display: none; }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.choose-gift-btn').forEach(btn => {
-    btn.addEventListener('mouseover', function() {
-      this.style.background = '#111';
-      this.style.color = '#fff544';
-    });
-    btn.addEventListener('mouseout', function() {
-      this.style.background = '#fff544';
-      this.style.color = '#111';
-    });
-  });
-  document.querySelectorAll('.shop-now-btn').forEach(btn => {
-    btn.addEventListener('mouseover', function() {
-      this.style.background = '#fff544';
-      this.style.color = '#111';
-    });
-    btn.addEventListener('mouseout', function() {
-      this.style.background = '#111';
-      this.style.color = '#fff';
-    });
-  });
-});
-</script>
