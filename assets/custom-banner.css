@@ -18,7 +18,7 @@
   align-items: center;
   padding: 1rem 2.5rem;
   border-bottom: 2px solid #000;
-  flex-shrink: 0; /* Prevents the top bar from shrinking */
+  flex-shrink: 0;
 }
 .top-bar-left, .top-bar-center, .top-bar-right {
   flex: 1;
@@ -38,45 +38,67 @@
 
 /* --- Main Content Area --- */
 .banner-main-area {
+  position: relative; /* Establishes the positioning context for all child elements */
   flex-grow: 1;
-  display: flex; /* Use flexbox for a side-by-side layout */
-  align-items: stretch; /* Make children fill the container's height */
+  display: block; /* No flex or grid needed here, children will be positioned absolutely */
 }
 
-/* --- Text Content (Left Column) --- */
+/* --- Text Content (Bottom-Left Quadrant) --- */
 .banner-text-content {
-  flex-basis: 45%; /* Takes up the left 45% of the space */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  z-index: 3;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically centers the text and button */
+  justify-content: center; /* Vertically center the inner content */
   padding: 2rem 2.5rem;
+  box-sizing: border-box; /* Ensure padding is included in the width/height */
   text-align: left;
-  box-sizing: border-box;
 }
 
-/* --- Vector Image Container (Right Column) --- */
+/* --- Vector Images Wrapper --- */
 .banner-vectors-wrapper {
-  flex-basis: 55%; /* Takes up the right 55% of the space */
-  display: flex;
-  flex-direction: column; /* Stacks the two images vertically */
-  overflow: hidden; /* Prevents images from spilling out */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.vector-frame-1,
+/* --- Vector Frame 1 (Top Half) --- */
+.vector-frame-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  object-fit: cover; /* Ensures image fills the area without distortion */
+  z-index: 1;
+}
+
+/* --- Vector Frame 2 (Bottom-Right Quadrant) --- */
 .vector-frame-2 {
-  width: 100%; /* Each image fills the width of the right column */
-  height: 50%;  /* Each image takes exactly half the height */
-  object-fit: cover; /* Fills the space without distorting aspect ratio */
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  height: 50%;
+  object-fit: cover; /* Ensures image fills the area without distortion */
+  z-index: 2;
 }
 
+/* --- Typography & Buttons (No changes needed here) --- */
 .banner-text-content h1 {
   font-family: Jost;
-  font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive font size */
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-style: Medium;
   font-weight: 500;
   line-height: 1.1;
   color: #000;
-  vertical-align: middle;
   margin: 0 0 1.5rem 0;
 }
 .banner-text-content p {
@@ -86,11 +108,9 @@
   font-weight: 400;
   line-height: 1.6;
   color: #333;
-  vertical-align: middle;
   margin: 0 0 2rem 0;
 }
 
-/* --- Buttons & Hover Transitions --- */
 .choose-gift-btn,
 .shop-now-btn {
   display: inline-flex;
@@ -103,11 +123,10 @@
   text-transform: uppercase;
   border: 2px solid #000;
   cursor: pointer;
-  /* THE SMOOTH TRANSITION */
   transition: background-color 0.4s ease-out, color 0.4s ease-out, transform 0.2s ease-out;
 }
 .choose-gift-btn {
-  background-color:rgb(255, 217, 0); /* Figma Yellow */
+  background-color:rgb(255, 217, 0);
   color: #111;
   padding: 0.75rem 1.5rem;
 }
@@ -115,13 +134,14 @@
   background-color: #111;
   color: #fff;
   padding: 1rem 2.5rem;
+  align-self: flex-start; /* Ensure button doesn't stretch */
 }
 
 /* HOVER STATES */
 .choose-gift-btn:hover {
   background-color: #111;
   color:rgb(255, 217, 0);
-  transform: translateY(-3px); /* Button lift effect */
+  transform: translateY(-3px);
 }
 .shop-now-btn:hover {
   background-color:rgb(255, 217, 0);
@@ -143,36 +163,42 @@
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-  /* Revert to the original design approach for mobile */
+  /* On mobile, revert to a simpler, full-background layout */
+  .banner-main-area,
+  .banner-text-content,
+  .banner-vectors-wrapper,
+  .vector-frame-1,
+  .vector-frame-2 {
+    position: static; /* Remove all absolute positioning */
+    width: auto;
+    height: auto;
+  }
+  
   .banner-main-area {
-    flex-direction: column; /* Stack text on top of images */
-    position: relative;
+    position: relative; /* Needed to layer text over image */
+    display: flex;
+    align-items: flex-start;
+    padding-top: 2rem;
   }
 
-  /* Make vectors a faint background */
   .banner-vectors-wrapper {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0.15; /* Make background faint */
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.1; /* Make the background very faint */
   }
-
+  
   .vector-frame-1 {
-    height: 100%; /* Let the first frame be the main background */
+    height: 100%; /* Use only the first image as the background */
   }
 
   .vector-frame-2 {
-    display: none; /* Hide the second frame on mobile for simplicity */
+    display: none; /* Hide the second image for simplicity */
   }
 
   .banner-text-content {
     width: 100%;
-    position: relative;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.8); /* Add background for readability */
-    padding: 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem;
   }
 }
