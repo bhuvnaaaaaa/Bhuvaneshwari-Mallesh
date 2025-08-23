@@ -65,10 +65,11 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 55%; /* Covers bottom-right quadrant */
-  max-width: 800px;
+  width: 100%; /* Covers bottom-right quadrant */
   height: auto;
   z-index: 2; /* Sits on top of the first vector */
+  -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
+  mask-image: linear-gradient(to top, black 50%, transparent 100%);
 }
 
 /* --- Text Content --- */
