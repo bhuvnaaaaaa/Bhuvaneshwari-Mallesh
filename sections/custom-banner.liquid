@@ -81,22 +81,22 @@
   <div class="banner-topbar">
     <span class="logo_text">{{ section.settings.logo_text }}</span>
     <span class="topbar-text">{{ section.settings.topbar_text }}</span>
-    <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link }}">{{ section.settings.choose_gift_text }}</a>
+    <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link }}">{{ section.settings.choose_gift_text }} target="custom-product-grid"</a>
   </div>
   <!-- Banner Main -->
   <div class="banner-main">
     <div class="banner-vectors">
       {% if section.settings.vector_frame_1 != blank %}
-        <img src="{{ section.settings.vector_frame_1 | image_url: width: 900, height: 600 }}" alt="Vector Frame 1" class="vector-frame-1" />
+        <img src="{{ section.settings.vector_frame_1 | image_url: width: 1000, height: 600 }}" alt="Vector Frame 1" class="vector-frame-1" />
       {% endif %}
       {% if section.settings.vector_frame_2 != blank %}
-        <img src="{{ section.settings.vector_frame_2 | image_url: width: 600, height: 600 }}" alt="Vector Frame 2" class="vector-frame-2" />
+        <img src="{{ section.settings.vector_frame_2 | image_url: width: 900, height: 900 }}" alt="Vector Frame 2" class="vector-frame-2" />
       {% endif %}
     </div>
     <div class="banner-content">
       <h1>{{ section.settings.banner_title }}</h1>
       <p>{{ section.settings.banner_description }}</p>
-      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">{{ section.settings.shop_now_text }} target= "custom-product-grid"</a>
+      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">{{ section.settings.shop_now_text }} target="custom-product-grid"</a>
     </div>
   </div> 
   <div class="banner-footer-text">
