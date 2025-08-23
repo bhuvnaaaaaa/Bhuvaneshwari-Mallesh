@@ -65,7 +65,7 @@
     color: #111;
     letter-spacing: -1px;
     position: relative;
-    top: 600;
+    top: 800;
   }
   .banner-content p {
     font-size: 18px;
@@ -73,7 +73,7 @@
     margin-bottom: 32px;
     line-height: 1.5;
     position: relative;
-    top: 800;
+    bottom:0;
   }
   .shop-now-btn {
     display: inline-block;
