@@ -73,7 +73,7 @@
 
 /* --- Text Content --- */
 .banner-text-content {
-  position: relative;
+  position: bottom-left;
   z-index: 3; /* Sits on top of all vectors */
   max-width: 35rem;
   padding: 2rem 2.5rem;
