@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- DOM Element Selectors ---
   const gridContainer = document.querySelector('.custom-product-grid-container');
   const modal = document.getElementById('product-popup-modal');
-  if (!gridContainer || !modal) return; // Exit if essential elements are missing
+  if (!gridContainer || !modal) return;
 
   const grid = gridContainer.querySelector('.product-grid');
   const closeButton = modal.querySelector('.popup-close-button');
@@ -27,21 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function openPopup() {
     if (!currentProductData) return;
     
-    // 1. Populate static content
     modal.querySelector('#popup-product-title').textContent = currentProductData.title;
     modal.querySelector('#popup-product-image').src = currentProductData.featured_image || '';
     modal.querySelector('#popup-product-description').innerHTML = currentProductData.description;
     
-    // 2. Render variant options dynamically
     renderVariantSelectors();
-    
-    // 3. Set initial state (price, button)
     updateVariantState();
     
-    // 4. Show the modal
     modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('is-visible'), 10); // For transition
-    document.body.style.overflow = 'hidden'; // Prevent background scroll
+    setTimeout(() => modal.classList.add('is-visible'), 10);
+    document.body.style.overflow = 'hidden';
   }
   
   function closePopup() {
@@ -49,13 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
     setTimeout(() => {
         modal.style.display = 'none';
-    }, 300); // Match CSS transition duration
+    }, 300);
   }
   
   // --- Dynamic Variant Rendering ---
   function renderVariantSelectors() {
     const optionsContainer = modal.querySelector('#popup-variant-options');
-    optionsContainer.innerHTML = ''; // Clear previous options
+    optionsContainer.innerHTML = '';
     
     currentProductData.options_with_values.forEach((option, index) => {
       const fieldset = document.createElement('fieldset');
@@ -66,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       legend.textContent = option.name;
       fieldset.appendChild(legend);
 
-      // Render as buttons for the first option (e.g., Color), dropdown for others
+      // Option 1: Render as styled radio buttons (e.g., Color)
       if (index === 0) {
         const buttonsWrapper = document.createElement('div');
         buttonsWrapper.classList.add('variant-buttons');
@@ -78,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
           input.name = `option-${index}`;
           input.value = value;
           input.classList.add('variant-radio-input');
-          if (valueIndex === 0) input.checked = true; // Pre-select first option
+          if (valueIndex === 0) input.checked = true;
           
           const label = document.createElement('label');
           label.htmlFor = inputId;
@@ -89,39 +84,87 @@ document.addEventListener('DOMContentLoaded', () => {
           buttonsWrapper.appendChild(label);
         });
         fieldset.appendChild(buttonsWrapper);
-      } else {
-        const selectWrapper = document.createElement('div');
-        selectWrapper.classList.add('variant-select-wrapper');
-        const select = document.createElement('select');
-        select.name = `option-${index}`;
-        select.classList.add('variant-select');
-        option.values.forEach(value => {
-            const optionElement = document.createElement('option');
-            optionElement.value = value;
-            optionElement.textContent = value;
-            select.appendChild(optionElement);
-        });
-        selectWrapper.appendChild(select);
-        fieldset.appendChild(selectWrapper);
+      } 
+      // Other Options: Render as a custom dropdown (e.g., Size)
+      else {
+        fieldset.appendChild(createCustomDropdown(option, index));
       }
       optionsContainer.appendChild(fieldset);
     });
 
-    // Add change listeners to new inputs
-    optionsContainer.querySelectorAll('input, select').forEach(el => {
+    optionsContainer.querySelectorAll('input').forEach(el => {
       el.addEventListener('change', updateVariantState);
     });
   }
 
+  function createCustomDropdown(option, index) {
+    const initialValue = option.values[0];
+    
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('custom-select-wrapper');
+    wrapper.dataset.optionIndex = `option-${index}`;
+    wrapper.dataset.selectedValue = initialValue;
+
+    const trigger = document.createElement('div');
+    trigger.classList.add('custom-select-trigger');
+    trigger.setAttribute('role', 'button');
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.innerHTML = `<span>${initialValue}</span><div class="arrow"></div>`;
+    
+    const optionsList = document.createElement('ul');
+    optionsList.classList.add('custom-options');
+    optionsList.setAttribute('role', 'listbox');
+
+    option.values.forEach(value => {
+      const optionElement = document.createElement('li');
+      optionElement.textContent = value;
+      optionElement.dataset.value = value;
+      optionElement.setAttribute('role', 'option');
+      optionsList.appendChild(optionElement);
+    });
+    
+    wrapper.appendChild(trigger);
+    wrapper.appendChild(optionsList);
+
+    // Event listeners for custom dropdown
+    trigger.addEventListener('click', () => {
+      wrapper.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', wrapper.classList.contains('is-open'));
+    });
+
+    optionsList.addEventListener('click', (e) => {
+      if (e.target.tagName === 'LI') {
+        const newValue = e.target.dataset.value;
+        wrapper.dataset.selectedValue = newValue;
+        trigger.querySelector('span').textContent = newValue;
+        wrapper.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        updateVariantState();
+      }
+    });
+    
+    return wrapper;
+  }
+
   // --- State Update and Cart Logic ---
   function updateVariantState() {
-    const selectedOptions = Array.from(
-      modal.querySelectorAll('#popup-variant-options input:checked, #popup-variant-options select')
-    ).map(el => el.value);
-    
-    const selectedVariant = currentProductData.variants.find(variant => {
-      return variant.options.every((option, index) => option === selectedOptions[index]);
+    const selectedOptions = [];
+    currentProductData.options_with_values.forEach((option, index) => {
+        const checkedRadio = modal.querySelector(`input[name="option-${index}"]:checked`);
+        if (checkedRadio) {
+            selectedOptions.push(checkedRadio.value);
+        } else {
+            const customSelect = modal.querySelector(`.custom-select-wrapper[data-option-index="option-${index}"]`);
+            if (customSelect) {
+                selectedOptions.push(customSelect.dataset.selectedValue);
+            }
+        }
     });
+    
+    const selectedVariant = currentProductData.variants.find(variant => 
+      variant.options.every((option, index) => option === selectedOptions[index])
+    );
     
     const priceEl = modal.querySelector('#popup-product-price');
     const buttonEl = modal.querySelector('#popup-add-to-cart-button');
@@ -131,13 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (selectedVariant) {
       priceEl.textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(selectedVariant.price / 100);
       variantIdEl.value = selectedVariant.id;
-      if (selectedVariant.available) {
-        buttonEl.disabled = false;
-        buttonTextEl.textContent = 'Add to Cart';
-      } else {
-        buttonEl.disabled = true;
-        buttonTextEl.textContent = 'Sold Out';
-      }
+      buttonEl.disabled = !selectedVariant.available;
+      buttonTextEl.textContent = selectedVariant.available ? 'Add to Cart' : 'Sold Out';
     } else {
       buttonEl.disabled = true;
       buttonTextEl.textContent = 'Unavailable';
@@ -156,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let itemsToAdd = [{ id: variantId, quantity: 1 }];
 
-    // --- SPECIAL CART RULE LOGIC ---
     const selectedVariant = currentProductData.variants.find(v => v.id == variantId);
     const softJacketHandle = gridContainer.dataset.softJacketHandle;
     
@@ -173,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    // --- Add to Cart API Call ---
     try {
       await fetch('/cart/add.js', {
         method: 'POST',
@@ -181,24 +217,29 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ items: itemsToAdd })
       });
       closePopup();
-      // Optional: update cart count or show a success notification
     } catch (e) {
       console.error("Error adding to cart:", e);
       button.querySelector('.button-text').textContent = 'Error!';
     } finally {
-        // Re-enable button after a delay
         setTimeout(() => {
-            if(!button.disabled){
-                button.disabled = false;
+            if (button.querySelector('.button-text').textContent !== 'Add to Cart') {
+               updateVariantState(); // Re-check availability and update button
             }
-        }, 1000);
+        }, 1500);
     }
   }
 
-  // --- Attach Event Listeners ---
+  // --- Attach Global Event Listeners ---
   closeButton.addEventListener('click', closePopup);
   modal.addEventListener('click', (event) => {
-    if (event.target === modal) closePopup(); // Close if clicking on the overlay
+    if (event.target === modal) closePopup();
+  });
+  document.addEventListener('click', (event) => {
+    const openDropdown = document.querySelector('.custom-select-wrapper.is-open');
+    if (openDropdown && !openDropdown.contains(event.target)) {
+        openDropdown.classList.remove('is-open');
+        openDropdown.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
+    }
   });
   form.addEventListener('submit', handleFormSubmit);
 });
