@@ -12,7 +12,7 @@
       "type": "text",
       "id": "topbar_text",
       "label": "Top Bar Text",
-      "default": "Find the ideal gift for your loved ones."
+      "default": "Find the ideal gift for your loved ones"
     },
     {
       "type": "text",
@@ -53,12 +53,12 @@
     {
       "type": "image_picker",
       "id": "vector_frame_1",
-      "label": "Vector Frame 1 (Lower Half)"
+      "label": "Vector Frame 1 "
     },
     {
       "type": "image_picker",
       "id": "vector_frame_2",
-      "label": "Vector Frame 2 (Upper Right)"
+      "label": "Vector Frame 2"
     },
     {
       "type": "text",
@@ -81,22 +81,22 @@
   <div class="banner-topbar">
     <span class="logo_text">{{ section.settings.logo_text }}</span>
     <span class="topbar-text">{{ section.settings.topbar_text }}</span>
-     <a class="gift-banner__rightcta" href="{{ section.settings.button_url }}">{{ section.settings.cta_text }}</a>
+    <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link }} ">{{ section.settings.choose_gift_text }}</a> 
   </div>
   <!-- Banner Main -->
   <div class="banner-main">
     <div class="banner-vectors">
       {% if section.settings.vector_frame_1 != blank %}
-        <img src="{{ section.settings.vector_frame_1 | img_url: '900x600' }}" alt="Vector Frame 1" class="vector-frame-1" />
+        <img src="{{ section.settings.vector_frame_1 | image_url: width: 1000, height: 600 }}" alt="Vector Frame 1" class="vector-frame-1" />
       {% endif %}
       {% if section.settings.vector_frame_2 != blank %}
-        <img src="{{ section.settings.vector_frame_2 | img_url: '600x600' }}" alt="Vector Frame 2" class="vector-frame-2" />
+        <img src="{{ section.settings.vector_frame_2 | image_url: width: 900, height: 800 }}" alt="Vector Frame 2" class="vector-frame-2" />
       {% endif %}
     </div>
     <div class="banner-content">
       <h1>{{ section.settings.banner_title }}</h1>
       <p>{{ section.settings.banner_description }}</p>
-      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">{{ section.settings.shop_now_text }}</a>
+      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">{{ section.settings.shop_now_text }} </a>
     </div>
   </div> 
   <div class="banner-footer-text">
@@ -124,16 +124,33 @@
   box-sizing: border-box;
 }
 .logo_text {
-  font-weight: 700;
-  letter-spacing: 2px;
-  font-size: 18px;
-  color: #222;
+  font-family: Avenir LT Std;
+  font-weight: 750;
+  font-style: 95 Black;
+  font-size: 16px;
+  line-height: 141%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+
 }
 .topbar-text {
-  font-size: 15px;
-  color: #222;
+  font-style: Lustria;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0px;
+  vertical-align: middle;
+
 }
 .choose-gift-btn {
+  font-family: Jost;
+  font-style: Regular;
+  font-family: Jost;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20.48px;
+  letter-spacing: 0px;
   background: #fff544;
   color: #111;
   padding: 12px 32px;
@@ -141,61 +158,68 @@
   font-weight: 600;
   text-decoration: none;
   text-transform: uppercase;
-  font-size: 16px;
   border: none;
   transition: background 0.3s, color 0.3s;
   display: flex;
   align-items: center;
   gap: 8px;
+  
 }
 .choose-gift-btn:hover {
   background: #111;
   color: #fff544;
-  transform: scale(1.05);
+  transition: 0.4s ease;
 }
 .banner-main {
-  position: relative;
+  position: bottom;
   width: 100%;
   min-height: 500px;
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
   background: #fff;
+  font-family: Jost;
+  font-style: Medium;
+  font-size: 70px;
+  leading-trim: NONE;
+  line-height: 100%;
+  letter-spacing: 0px;
+  vertical-align: middle;
 }
 .banner-vectors {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 55vw;
-  max-width: 800px;
-  min-width: 300px;
+  inset: 0; /* cover full banner */
+  pointer-events: none;
   z-index: 1;
 }
+
 .vector-frame-1 {
   position: absolute;
+  top: 0;
   left: 0;
-  bottom: 0;
-  width: 55vw;
-  max-width: 800px;
-  min-width: 300px;
-  z-index: 1;
+  width: 100%;
+  height: 340px;
+  margin top: 32px;
 }
+
 .vector-frame-2 {
   position: absolute;
+  bottom: 0;
   right: 0;
-  top: 0;
-  width: 45vw;
-  max-width: 600px;
-  min-width: 200px;
-  z-index: 1;
+  width: 700px;
+  height: -400px;
+  background-position: center bottom;
+  margin bottom: 10px;
 }
+
 .banner-content {
+  font-family: Jost;
+  font-style: Medium;
+  font-size: 70px;
   position: relative;
   z-index: 2;
-  padding: 80px 48px 48px 48px;
-  max-width: 600px;
-  background: rgba(255,255,255,0.95);
   margin: 60px 0 60px 60px;
+  max-width: 600px;
   border-radius: 0;
   box-shadow: none;
   text-align: left;
@@ -206,22 +230,34 @@
   margin-bottom: 24px;
   color: #111;
   letter-spacing: -1px;
+  vertical-align: middle;
+  position: relative;
+  
+
 }
 .banner-content p {
   font-size: 18px;
   color: #222;
   margin-bottom: 32px;
   line-height: 1.5;
+  vertical-align: middle;
+  position: relative;
 }
 .shop-now-btn {
+  font-family: Jost;
+  font-style: Regular;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20.48px;
+  letter-spacing: 0px;
+  text-align: center;
+  text-transform: uppercase;
   background: #111;
   color: #fff;
   padding: 16px 40px;
   border-radius: 2px;
   font-weight: 600;
   text-decoration: none;
-  text-transform: uppercase;
-  font-size: 16px;
   border: none;
   transition: background 0.3s, color 0.3s;
   display: inline-block;
@@ -230,7 +266,7 @@
 .shop-now-btn:focus {
   background: #fff544;
   color: #111;
-  transform: scale(1.05);
+  transition: 0.4s ease;
 }
 .banner-footer-text {
   width: 100%;
@@ -244,12 +280,10 @@
   font-weight: 400;
   font-style: Regular;
   font-size: 16px;
-  leading-trim: NONE;
   line-height: 13.42px;
   letter-spacing: 0px;
   text-align: center;
   vertical-align: middle;
-
 }
 @media (max-width: 600px) {
   .banner-footer-text {
@@ -272,7 +306,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Button hover animations (for mobile fallback)
   document.querySelectorAll('.choose-gift-btn').forEach(btn => {
     btn.addEventListener('mouseover', function() {
       this.style.background = '#111';
