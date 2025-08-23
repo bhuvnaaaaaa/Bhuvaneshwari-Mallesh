@@ -26,13 +26,14 @@
 .top-bar-center { text-align: center; }
 .top-bar-right { text-align: right; }
 .logo-text {
-  font-family: sans-serif;
-  font-weight: 800;
+  font-family: Avenir LT Std;
+  font-weight: 750;
+  font-style: 95 Black;
   font-size: 1.25rem;
   letter-spacing: 0.05em;
 }
 .top-bar-promo-text {
-  font-family: serif;
+  font-family: Jost;
   font-size: 1rem;
 }
 
