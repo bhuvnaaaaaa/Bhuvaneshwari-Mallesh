@@ -24,7 +24,7 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  aspect-ratio: 1 / 1; /* Makes grid items perfectly square */
+  aspect-ratio: 1 / 1;
 }
 
 .grid-item-image {
@@ -47,7 +47,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
   opacity: 0;
   transition: opacity 0.4s ease-out;
 }
@@ -59,7 +59,7 @@
 .plus-icon-overlay span {
   width: 40px;
   height: 40px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -83,11 +83,13 @@
   justify-content: center;
   z-index: 1000;
   opacity: 0;
-  transition: opacity 0.3s ease-out;
+  visibility: hidden;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
 }
 
 .popup-overlay.is-visible {
   opacity: 1;
+  visibility: visible;
 }
 
 .popup-content {
@@ -114,6 +116,7 @@
   font-weight: 300;
   color: #888;
   cursor: pointer;
+  line-height: 1;
 }
 
 .popup-grid {
@@ -132,6 +135,7 @@
 .popup-title {
   font-size: 1.75rem;
   margin: 0 0 0.5rem 0;
+  font-weight: 600;
 }
 
 .popup-price {
@@ -158,6 +162,7 @@
 .variant-legend {
   font-weight: 600;
   margin-bottom: 0.75rem;
+  color: #333;
 }
 .variant-buttons {
   display: flex;
@@ -165,13 +170,13 @@
 }
 .variant-radio-label {
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
   border: 1px solid #ccc;
   cursor: pointer;
-  transition: all 0.2s ease-out;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 .variant-radio-input {
-  display: none; /* Hide the actual radio button */
+  display: none;
 }
 .variant-radio-input:checked + .variant-radio-label {
   border-color: #000;
@@ -179,20 +184,68 @@
   color: #fff;
 }
 
-.variant-select-wrapper {
+/* --- Custom Dropdown (Size Selector) --- */
+.custom-select-wrapper {
   position: relative;
-}
-.variant-select {
   width: 100%;
+}
+.custom-select-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.75rem;
   border: 1px solid #ccc;
-  appearance: none;
   background-color: #fff;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1.5em;
+  transition: border-color 0.3s ease;
+}
+.custom-select-wrapper.is-open .custom-select-trigger {
+  border-color: #000;
+}
+.custom-select-trigger .arrow {
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid #333;
+  border-bottom: 2px solid #333;
+  transform: rotate(-45deg);
+  transition: transform 0.3s ease;
+}
+.custom-select-wrapper.is-open .arrow {
+  transform: rotate(135deg);
+}
+
+.custom-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-top: none;
+  z-index: 10;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 150px; /* Limit height and allow scrolling */
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+.custom-select-wrapper.is-open .custom-options {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.custom-options li {
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.custom-options li:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 /* --- Add to Cart Button --- */
@@ -209,9 +262,9 @@
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-.add-to-cart-button:hover {
+.add-to-cart-button:hover:not(:disabled) {
   background-color: #333;
 }
 .add-to-cart-button:disabled {
@@ -234,8 +287,18 @@
   .product-grid {
     grid-template-columns: 1fr;
   }
+  .popup-content {
+    width: 95%;
+    padding: 1.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
   .popup-grid {
     grid-template-columns: 1fr;
-    text-align: center;
+  }
+  .popup-image-wrapper {
+    /* Ensure image doesn't get too large */
+    max-width: 300px; 
+    margin: 0 auto;
   }
 }
