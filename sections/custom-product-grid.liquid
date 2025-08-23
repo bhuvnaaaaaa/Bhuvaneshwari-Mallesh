@@ -1,35 +1,103 @@
-<link rel="stylesheet" href="{{ 'custom-banner.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'custom-grid.css' | asset_url }}">
 
-<div class="custom-banner-container">
-  <!-- Top Bar -->
-  <header class="banner-top-bar">
-    <div class="logo-text">TISSO VISON</div>
-    <div class="promo-text">Find the ideal gift for your loved ones.</div>
-    <a href="#gift" class="btn btn-outline">CHOOSE GIFT &rarr;</a>
-  </header>
-
-  <!-- Main Hero Section -->
-  <main class="banner-main-area">
-    <div class="banner-text-content">
-      <h1>The Gift Guide</h1>
-      <p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.</p>
-      <a href="#shop" class="btn btn-dark">SHOP NOW &rarr;</a>
-    </div>
-  </main>
-
-  <!-- Bottom Footer Bar -->
-  <footer class="banner-footer-bar">
-    <span>SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</span>
-  </footer>
+<div id="custom-product-grid" class="custom-product-grid-container" data-soft-jacket-handle="{{ settings.soft_winter_jacket.handle }}">
+  <h2 class="grid-title">{{ section.settings.title }}</h2>
+  
+  <div class="product-grid">
+    {% for i in (1..6) %}
+      {%- assign product_setting_key = 'product_' | append: i -%}
+      {%- assign selected_product = section.settings[product_setting_key] -%}
+      
+      {% if selected_product != blank %}
+        <div class="grid-item" role="button" tabindex="0" aria-label="View details for {{ selected_product.title }}" data-product-json="{{ selected_product | json | escape }}">
+          {% if selected_product.featured_image %}
+            {{ selected_product.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', class: 'grid-item-image' }}
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <div class="plus-icon-overlay">
+            <span>+</span>
+          </div>
+        </div>
+      {% else %}
+        {% comment %} Render a placeholder if no product is selected {% endcomment %}
+        <div class="grid-item-placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
 </div>
+
+{% comment %}
+  ============================================================
+  POPUP MODAL HTML STRUCTURE
+  This is hidden by default with CSS and controlled by JavaScript.
+  ============================================================
+{% endcomment %}
+<div id="product-popup-modal" class="popup-overlay" aria-modal="true" role="dialog" style="display: none;">
+  <div class="popup-content">
+    <button type="button" class="popup-close-button" aria-label="Close">
+      &times;
+    </button>
+    <div class="popup-grid">
+      <div class="popup-image-wrapper">
+        <img id="popup-product-image" src="" alt="Product Image" loading="lazy">
+      </div>
+      <div class="popup-details-wrapper">
+        <h3 id="popup-product-title" class="popup-title"></h3>
+        <p id="popup-product-price" class="popup-price"></p>
+        <div id="popup-product-description" class="popup-description"></div>
+        
+        <form id="popup-add-to-cart-form">
+          <div id="popup-variant-options" class="variant-options">
+            {% comment %} Variant selectors will be dynamically inserted here by JavaScript {% endcomment %}
+          </div>
+          
+          <input type="hidden" name="id" id="popup-selected-variant-id">
+          
+          <button type="submit" id="popup-add-to-cart-button" class="add-to-cart-button">
+            <span class="button-text">Add to Cart</span>
+            <span class="button-arrow">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'custom-grid.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
-  "name": "Custom Gift Banner",
-  "settings": [],
-  "presets": [
+  "name": "Custom Product Grid",
+  "settings": [
     {
-      "name": "Custom Gift Banner"
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Tisso vison in the wild"
+    },
+    { "type": "product", "id": "product_1", "label": "Product 1" },
+    { "type": "product", "id": "product_2", "label": "Product 2" },
+    { "type": "product", "id": "product_3", "label": "Product 3" },
+    { "type": "product", "id": "product_4", "label": "Product 4" },
+    { "type": "product", "id": "product_5", "label": "Product 5" },
+    { "type": "product", "id": "product_6", "label": "Product 6" },
+    {
+      "type": "header",
+      "content": "Special Cart Rule"
+    },
+    {
+      "type": "product",
+      "id": "soft_winter_jacket",
+      "label": "Soft Winter Jacket",
+      "info": "Select the 'Soft Winter Jacket' product that will be auto-added to the cart."
+    }
+  ],
+  "presets": [
+    { 
+      "name": "Custom Product Grid"
     }
   ]
 }
