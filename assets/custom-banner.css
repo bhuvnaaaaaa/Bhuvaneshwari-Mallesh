@@ -35,6 +35,7 @@
 }
 .top-bar-promo-text {
   font-family: Jost;
+  color: Black;
   font-size: 1rem;
 }
 
@@ -154,6 +155,7 @@
 /* --- Bottom Footer Bar --- */
 .banner-footer-bar {
   text-align: center;
+  color: Black;
   padding: 1rem 2.5rem;
   border-top: 2px solid #000;
   font-size: 0.8rem;
