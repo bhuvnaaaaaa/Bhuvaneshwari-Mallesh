@@ -158,7 +158,83 @@
     align-items: flex-start;
     padding-top: 2rem;
   }
+<<<<<<< HEAD
   .banner-text-content {
+=======
+  .topbar-text {
+    font-size: 15px;
+    color: #222;
+  }
+  .choose-gift-btn {
+    background: #fff544;
+    color: #111;
+    padding: 12px 32px;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+    border: none;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .choose-gift-btn:hover,
+  .choose-gift-btn.active {
+    background: #111;
+    color: #fff544;
+    transform: scale(1.08);
+  }
+  .banner-content {
+    padding: 40px 20px 20px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.95);
+    position: relative;
+    z-index: 2;
+    text-align: left;
+  }
+  .banner-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #111;
+    letter-spacing: -1px;
+    position: relative;
+    top: 800;
+  }
+  .banner-content p {
+    font-size: 18px;
+    color: #222;
+    margin-bottom: 32px;
+    line-height: 1.5;
+    position: relative;
+    bottom:0;
+  }
+  .shop-now-btn {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: #111;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 2px;
+    font-family: Jost, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+    border: none;
+    margin-top: 10px;
+  }
+  .shop-now-btn:hover,
+  .shop-now-btn.active {
+    background-color: #fff544;
+    color: #111;
+    transform: scale(1.08);
+  }
+  .banner-images img {
+>>>>>>> f333dcad58daf7c15fa12253ce1d67e1dcf4342a
     max-width: 100%;
     text-align: center;
     padding: 1.5rem;
