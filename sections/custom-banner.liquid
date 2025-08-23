@@ -1,0 +1,137 @@
+<link rel="stylesheet" href="{{ 'custom-banner.css' | asset_url }}">
+
+<div class="custom-banner-container">
+  <!-- Top Bar -->
+  <div class="banner-top-bar">
+    <div class="top-bar-left">
+      <span class="logo-text">{{ section.settings.logo_text }}</span>
+    </div>
+    <div class="top-bar-center">
+      <span class="top-bar-promo-text">{{ section.settings.topbar_text }}</span>
+    </div>
+    <div class="top-bar-right">
+      <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link | default: '#custom-product-grid' }}">
+        {{ section.settings.choose_gift_text }} &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="banner-main-area">
+    <!-- Background Vector Images -->
+    <div class="banner-vectors-wrapper">
+      {% if section.settings.vector_frame_1 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_1 | image_url: width: 2000 }}" 
+          alt="Gift guide illustration background" 
+          class="vector-frame-1" 
+          loading="lazy"
+          width="2000"
+          height="{{ 2000 | divided_by: section.settings.vector_frame_1.aspect_ratio | round }}"
+        >
+      {% endif %}
+      {% if section.settings.vector_frame_2 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_2 | image_url: width: 1200 }}" 
+          alt="Gift guide illustration accent" 
+          class="vector-frame-2"
+          loading="lazy"
+          width="1200"
+          height="{{ 1200 | divided_by: section.settings.vector_frame_2.aspect_ratio | round }}"
+        >
+      {% endif %}
+    </div>
+
+    <!-- Text and Button Content -->
+    <div class="banner-text-content">
+      <h1>{{ section.settings.banner_title }}</h1>
+      <p>{{ section.settings.banner_description }}</p>
+      <a href="{{ section.settings.shop_now_link | default: '#custom-product-grid' }}" class="shop-now-btn">
+        {{ section.settings.shop_now_text }} &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Footer Bar -->
+  <div class="banner-footer-bar">
+    <span>{{ section.settings.footer_text }}</span>
+  </div>
+</div>
+
+{% comment %}
+  The schema remains unchanged as it correctly defines all the necessary settings.
+{% endcomment %}
+{% schema %}
+{
+  "name": "Custom Banner",
+  "settings": [
+    { 
+      "type": "text", 
+      "id": "logo_text", 
+      "label": "Logo text", 
+      "default": "TISSO VISON" 
+    },
+    {
+      "type": "text",
+      "id": "topbar_text",
+      "label": "Top Bar Text",
+      "default": "Find the ideal gift for your loved ones"
+    },
+    {
+      "type": "text",
+      "id": "choose_gift_text",
+      "label": "Choose Gift Button Text",
+      "default": "CHOOSE GIFT"
+    },
+    {
+      "type": "url",
+      "id": "choose_gift_link",
+      "label": "Choose Gift Button Link"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "banner_description",
+      "label": "Banner Description",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+    },
+    {
+      "type": "text",
+      "id": "shop_now_text",
+      "label": "Shop Now Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "shop_now_link",
+      "label": "Shop Now Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "vector_frame_1",
+      "label": "Vector Frame 1 (Main Background)"
+    },
+    {
+      "type": "image_picker",
+      "id": "vector_frame_2",
+      "label": "Vector Frame 2 (Bottom-Right Accent)"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer Text",
+      "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Banner"
+    }
+  ]
+}
+{% endschema %}
