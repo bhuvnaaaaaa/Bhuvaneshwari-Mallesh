@@ -11,11 +11,32 @@
   "sections": {
     "custom_banner": {
       "type": "custom-banner",
-      "settings": {}
+      "settings": {
+        "logo_text": "TISSO VISON",
+        "topbar_text": "Find the ideal gift for your loved ones",
+        "choose_gift_text": "CHOOSE GIFT",
+        "choose_gift_link": "/",
+        "banner_title": "The Gift Guide",
+        "banner_description": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
+        "shop_now_text": "SHOP NOW",
+        "shop_now_link": "/",
+        "vector_frame_1": "shopify://shop_images/vector1.svg",
+        "vector_frame_2": "shopify://shop_images/vector1.svg",
+        "footer_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+      }
     },
     "custom_product_grid": {
       "type": "custom-product-grid",
-      "settings": {}
+      "settings": {
+        "title": "Tisso vison in the wild",
+        "product_1": "",
+        "product_2": "",
+        "product_3": "",
+        "product_4": "",
+        "product_5": "",
+        "product_6": "",
+        "soft_winter_jacket": ""
+      }
     },
     "image_banner": {
       "type": "image-banner",
