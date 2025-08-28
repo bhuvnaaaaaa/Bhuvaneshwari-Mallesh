@@ -1,46 +1,56 @@
 <link rel="stylesheet" href="{{ 'custom-banner.css' | asset_url }}">
 
-<div class="custom-banner">
+<div class="custom-banner-container">
   <!-- Top Bar -->
-  <div class="banner-topbar">
-    <span class="logo_text">{{ section.settings.logo_text }}</span>
-    <span class="topbar-text">{{ section.settings.topbar_text }}</span>
-    <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link }}">
-      {{ section.settings.choose_gift_text }}
-    </a>
+  <div class="custom-banner__top-bar">
+    <div class="top-bar__left">
+      <span class="logo-text">{{ section.settings.logo_text }}</span>
+    </div>
+    <div class="top-bar__center">
+      <span class="promo-text">{{ section.settings.topbar_text }}</span>
+    </div>
+    <div class="top-bar__right">
+      <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link | default: '#' }}">
+        {{ section.settings.choose_gift_text }} &rarr;
+      </a>
+    </div>
   </div>
 
-  <!-- Banner Main -->
-  <div class="banner-main">
-    {% if section.settings.vector_frame_1 != blank %}
-      <img 
-        src="{{ section.settings.vector_frame_1 | image_url: width: 1600 }}" 
-        alt="Vector Frame 1" 
-        class="vector-frame-1"
-      >
-    {% endif %}
-
-    {% if section.settings.vector_frame_2 != blank %}
-      <img 
-        src="{{ section.settings.vector_frame_2 | image_url: width: 1000 }}" 
-        alt="Vector Frame 2" 
-        class="vector-frame-2"
-      >
-    {% endif %}
-
-    <!-- Text pinned bottom-left -->
-    <div class="banner-content">
+  <!-- Main Content Area -->
+  <div class="custom-banner__main">
+    <!-- Left Column: Text Content -->
+    <div class="custom-banner__content">
       <h1>{{ section.settings.banner_title }}</h1>
       <p>{{ section.settings.banner_description }}</p>
-      <a href="{{ section.settings.shop_now_link }}" class="shop-now-btn">
-        {{ section.settings.shop_now_text }}
+      <a href="{{ section.settings.shop_now_link | default: '#' }}" class="shop-now-btn">
+        {{ section.settings.shop_now_text }} &rarr;
       </a>
+    </div>
+
+    <!-- Right Column: Vector Images -->
+    <div class="custom-banner__images">
+      {% if section.settings.vector_frame_1 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_1 | image_url: width: 1000 }}" 
+          alt="Illustration of travel and gift items" 
+          class="vector-image vector-image--1"
+          loading="lazy"
+        >
+      {% endif %}
+      {% if section.settings.vector_frame_2 != blank %}
+        <img 
+          src="{{ section.settings.vector_frame_2 | image_url: width: 1000 }}" 
+          alt="Illustration of camera and travel items" 
+          class="vector-image vector-image--2"
+          loading="lazy"
+        >
+      {% endif %}
     </div>
   </div> 
 
-  <!-- Footer -->
-  <div class="banner-footer-text">
-    {{ section.settings.footer_text }}
+  <!-- Bottom Footer Bar -->
+  <div class="custom-banner__footer">
+    <span>{{ section.settings.footer_text }}</span>
   </div>
 </div>
 
@@ -51,17 +61,17 @@
     { "type": "text", "id": "logo_text", "label": "Logo text", "default": "TISSO VISON" },
     { "type": "text", "id": "topbar_text", "label": "Top Bar Text", "default": "Find the ideal gift for your loved ones" },
     { "type": "text", "id": "choose_gift_text", "label": "Choose Gift Button Text", "default": "CHOOSE GIFT" },
-    { "type": "url", "id": "choose_gift_link", "label": "Choose Gift Button Link", "default": "/" },
+    { "type": "url", "id": "choose_gift_link", "label": "Choose Gift Button Link" },
     { "type": "text", "id": "banner_title", "label": "Banner Title", "default": "The Gift Guide" },
     { "type": "textarea", "id": "banner_description", "label": "Banner Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
     { "type": "text", "id": "shop_now_text", "label": "Shop Now Button Text", "default": "SHOP NOW" },
-    { "type": "url", "id": "shop_now_link", "label": "Shop Now Button Link", "default": "/" },
-    { "type": "image_picker", "id": "vector_frame_1", "label": "Vector Frame 1" },
-    { "type": "image_picker", "id": "vector_frame_2", "label": "Vector Frame 2" },
+    { "type": "url", "id": "shop_now_link", "label": "Shop Now Button Link" },
+    { "type": "image_picker", "id": "vector_frame_1", "label": "Vector Frame 1 (Top-Right)" },
+    { "type": "image_picker", "id": "vector_frame_2", "label": "Vector Frame 2 (Bottom-Right)" },
     { "type": "text", "id": "footer_text", "label": "Footer Text", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL" }
   ],
   "presets": [
-    { "name": "Custom Banner", "category": "Custom" }
+    { "name": "Custom Banner" }
   ]
 }
 {% endschema %}

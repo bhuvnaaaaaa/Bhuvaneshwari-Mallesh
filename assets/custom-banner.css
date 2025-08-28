@@ -1,158 +1,148 @@
-/* ============================
-   Custom Banner Styles (Cleaned)
-   ============================ */
-
-.custom-banner {
-  position: relative;
+/* --- Main Banner Container --- */
+.custom-banner-container {
   display: flex;
   flex-direction: column;
   min-height: 90vh;
-  background: #fff;
-  overflow: hidden;
+  background-color: #fff;
+  border: 2px solid #000;
   font-family: Jost, Arial, sans-serif;
+  overflow: hidden; /* Important for contained borders */
 }
 
-/* Top bar */
-.banner-topbar {
+/* --- Top Bar --- */
+.custom-banner__top-bar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
-}
-.logo_text {
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.topbar-text {
-  font-family: "Lustria", Georgia, serif;
-  font-size: 16px;
-  color: #333;
-}
-.choose-gift-btn {
-  padding: 12px 24px;
-  background: #fff544;
-  color: #111;
-  font-weight: 600;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
+  padding: 1rem 2.5rem;
+  border-bottom: 2px solid #000;
+  flex-shrink: 0;
 }
-.choose-gift-btn::after {
-  content: "➝"; /* right arrow */
-  font-size: 18px;
-  transition: transform 0.3s ease;
-}
-.choose-gift-btn:hover {
-  background: #111;
-  color: #fff544;
-}
-.choose-gift-btn:hover::after {
-  transform: translateX(4px);
-}
-
-/* Banner main */
-.banner-main {
-  position: relative;
+.top-bar__left, .top-bar__center, .top-bar__right {
   flex: 1;
-  min-height: 600px;
+}
+.top-bar__center { text-align: center; }
+.top-bar__right { text-align: right; }
+.logo-text {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+}
+.promo-text {
+  font-family: serif;
+  font-size: 1rem;
 }
 
-/* Vector images */
-.banner-vectors {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-.vector-frame-1 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-.vector-frame-2 {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: min(55%, 820px);
-  height: auto;
+/* --- Main Content Area (Flexbox Layout) --- */
+.custom-banner__main {
+  display: flex;
+  flex-grow: 1; /* Allows this area to fill available vertical space */
 }
 
-/* Text block pinned bottom-left */
-.banner-content {
-  position: absolute;
-  left: 64px;
-  bottom: 96px;
-  z-index: 2;
-  max-width: 560px;
-  color: #111;
-  text-align: left;
+/* --- Left Column: Text --- */
+.custom-banner__content {
+  flex-basis: 45%; /* Takes up 45% of the width */
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically center the text and button */
+  box-sizing: border-box;
 }
-.banner-content h1 {
-  font-size: clamp(36px, 6vw, 64px);
+.custom-banner__content h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
+  margin: 0 0 1rem 0;
+  color: #000;
+  line-height: 1.1;
 }
-.banner-content p {
-  font-size: 18px;
-  line-height: 1.5;
-  color: #222;
-  margin-bottom: 24px;
+.custom-banner__content p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #333;
+  margin: 0 0 2rem 0;
 }
+
+/* --- Right Column: Images --- */
+.custom-banner__images {
+  flex-basis: 55%;
+  display: flex;
+  flex-direction: column; /* Stack images vertically */
+  border-left: 2px solid #000;
+}
+.vector-image {
+  width: 100%;
+  height: 50%; /* Each image takes half the height of the column */
+  object-fit: cover; /* Fills the container without distortion */
+}
+.vector-image--1 {
+  border-bottom: 2px solid #000;
+}
+
+/* --- Buttons & Hover Transitions --- */
+.choose-gift-btn,
 .shop-now-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 16px 32px;
-  background: #111;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 600;
+  gap: 0.75rem;
   text-decoration: none;
-  transition: all 0.3s ease;
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  border: 2px solid #000;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-.shop-now-btn::after {
-  content: "➝"; /* right arrow */
-  font-size: 20px;
-  transition: transform 0.3s ease;
+.choose-gift-btn {
+  background-color: #FFD900; /* A vibrant, accessible yellow */
+  color: #000;
+  padding: 0.75rem 1.5rem;
+}
+.shop-now-btn {
+  background-color: #000;
+  color: #fff;
+  padding: 1rem 2.5rem;
+  align-self: flex-start; /* Prevent button from stretching full-width */
+}
+
+.choose-gift-btn:hover {
+  background-color: #000;
+  color: #FFD900;
 }
 .shop-now-btn:hover {
-  background: #fff544;
-  color: #111;
-}
-.shop-now-btn:hover::after {
-  transform: translateX(6px);
+  background-color: #FFD900;
+  color: #000;
 }
 
-/* Footer */
-.banner-footer-text {
+/* --- Bottom Footer Bar --- */
+.custom-banner__footer {
   text-align: center;
-  padding: 12px 24px;
-  font-size: 12px;
-  letter-spacing: 1.6px;
+  padding: 1rem 2.5rem;
+  border-top: 2px solid #000;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #111;
+  font-weight: 500;
+  flex-shrink: 0;
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .banner-content {
-    position: relative;
-    left: auto;
-    bottom: auto;
-    margin: 24px auto;
-    padding: 0 16px;
-    max-width: 90%;
+/* --- Responsive Adjustments --- */
+@media (max-width: 800px) {
+  .custom-banner__main {
+    flex-direction: column; /* Stack columns on mobile */
   }
-  .vector-frame-2 {
-    display: none;
+  .custom-banner__images {
+    border-left: none;
+    border-top: 2px solid #000;
+    flex-direction: row; /* Show images side-by-side if space allows */
+    height: 300px;
+  }
+  .vector-image {
+    width: 50%;
+    height: 100%;
+  }
+  .vector-image--1 {
+    border-bottom: none;
+    border-right: 2px solid #000;
   }
 }
