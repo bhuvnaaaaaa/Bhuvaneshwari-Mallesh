@@ -1,131 +1,144 @@
 /* ============================
-   Custom Banner (matches custom-banner.liquid)
+   Custom Banner Styles
    ============================ */
 
-/* Shell */
-.custom-banner{
+.custom-banner {
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 90vh;
-  background:#fff;
-  border:2px solid #000;
-  box-sizing:border-box;
-  overflow:hidden;
+  background: #fff;
+  overflow: hidden;
   font-family: Jost, Arial, sans-serif;
+  border: 2px solid #000;
 }
 
 /* Top bar */
-.banner-topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 32px;
-  border-bottom:2px solid #000;
+.banner-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 2px solid #000;
 }
-.logo_text{
-  font-weight:800;
-  letter-spacing:.06em;
-  font-size:18px;
-  text-transform:uppercase;
+.logo_text {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
-.topbar-text{
+.topbar-text {
   font-family: "Lustria", Georgia, serif;
-  font-size:16px;
-  color:#333;
+  font-size: 16px;
+  color: #333;
 }
-.choose-gift-btn{
-  display:inline-flex; align-items:center; gap:.5rem;
-  padding:12px 24px;
-  background:#fff544; color:#111;
-  border:2px solid #000; border-radius:2px;
-  font-weight:600; text-transform:uppercase;
-  text-decoration:none; cursor:pointer;
-  transition:background-color .25s ease, color .25s ease, transform .15s ease;
+.choose-gift-btn {
+  padding: 12px 24px;
+  background: #fff544;
+  color: #111;
+  border: 2px solid #000;
+  border-radius: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
-.choose-gift-btn:hover{ background:#111; color:#fff544; transform:translateY(-2px); }
-
-/* Main area */
-.banner-main{
-  position:relative;
-  flex:1;
-  min-height:600px; /* ensures tall hero on desktop */
+.choose-gift-btn:hover {
+  background: #111;
+  color: #fff544;
 }
 
-/* Vector layers */
-.banner-vectors{
-  position:absolute; inset:0;
-  pointer-events:none; z-index:1;
-}
-.banner-vectors .vector-frame-1{
-  position:absolute; top:0; left:0;
-  width:100%; height:auto; min-height:100%;
-  object-fit:cover;
-}
-.banner-vectors .vector-frame-2{
-  position:absolute; right:0; bottom:0;
-  width:min(55%, 820px);
-  height:auto;
+/* Banner main */
+.banner-main {
+  position: relative;
+  flex: 1;
+  min-height: 600px;
 }
 
-/* Text block — bottom-left */
-.banner-content{
-  position:absolute;
-  left:64px; bottom:96px;        /* <- bottom-left anchor */
-  z-index:2;
-  max-width:560px;
-  color:#111;
+/* Vector images */
+.banner-vectors {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
 }
-.banner-content h1{
-  margin:0 0 16px 0;
-  font-size:clamp(36px, 7vw, 72px);
-  line-height:1.05;
-  font-weight:700;
-  letter-spacing:-.02em;
+.vector-frame-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
-.banner-content p{
-  margin:0 0 24px 0;
-  font-size:18px; line-height:1.55; color:#222;
-}
-.shop-now-btn{
-  display:inline-block;
-  padding:16px 32px;
-  background:#111; color:#fff;
-  border:2px solid #111; border-radius:2px;
-  text-decoration:none; text-transform:uppercase; font-weight:600;
-  transition:background-color .25s ease, color .25s ease, transform .15s ease;
-}
-.shop-now-btn:hover{ background:#fff544; color:#111; transform:translateY(-2px); }
-
-/* Footer strip */
-.banner-footer-text{
-  text-align:center;
-  padding:12px 24px;
-  border-top:2px solid #000;
-  font-size:12px; letter-spacing:1.6px; text-transform:uppercase;
-  color:#111;
+.vector-frame-2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: min(55%, 820px);
+  height: auto;
 }
 
-/* ----------------------------
-   Responsive
-   ---------------------------- */
-@media (max-width: 1200px){
-  .banner-content{ left:40px; bottom:72px; }
+/* Text block pinned bottom-left */
+.banner-content {
+  position: absolute;
+  left: 64px;
+  bottom: 96px;
+  z-index: 2;
+  max-width: 560px;
+  color: #111;
+  text-align: left;
 }
-@media (max-width: 900px){
-  .banner-content{ left:28px; bottom:56px; max-width:520px; }
+.banner-content h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
 }
-@media (max-width: 768px){
-  .banner-topbar{ padding:12px 16px; gap:8px; }
-  .topbar-text{ font-size:14px; }
-  .banner-vectors .vector-frame-2{ display:none; }          /* simplify on mobile */
-  .banner-main{ min-height:auto; padding-bottom:24px; }
-  .banner-content{
-    position:relative; left:auto; bottom:auto;      /* stack normally on mobile */
-    padding:24px 16px; margin-top:16px; max-width:620px;
+.banner-content p {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #222;
+  margin-bottom: 24px;
+}
+.shop-now-btn {
+  display: inline-block;
+  padding: 16px 32px;
+  background: #111;
+  color: #fff;
+  border: 2px solid #111;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.shop-now-btn:hover {
+  background: #fff544;
+  color: #111;
+}
+
+/* Footer */
+.banner-footer-text {
+  text-align: center;
+  padding: 12px 24px;
+  border-top: 2px solid #000;
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #111;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .banner-content {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin: 24px auto;
+    padding: 0 16px;
+    max-width: 90%;
   }
-}
-@media (max-width: 420px){
-  .banner-content h1{ font-size:32px; }
-  .banner-content p{ font-size:16px; }
+  .vector-frame-2 {
+    display: none;
+  }
 }
