@@ -56,14 +56,10 @@
 }
 
 /* Banner main */
-..banner-main {
+.banner-main {
   position: relative;
   flex: 1;
   min-height: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end; 
-  padding: 0 64px 96px; 
 }
 
 /* Vector images */
@@ -80,40 +76,37 @@
   width: 100%;
   height: auto;
   object-fit: cover;
-  z-index: 0;
 }
-
 .vector-frame-2 {
   position: absolute;
   bottom: 0;
   right: 0;
   width: min(55%, 820px);
   height: auto;
-  z-index: 1;
 }
 
-
+/* Text block pinned bottom-left */
 .banner-content {
   position: absolute;
-  bottom: 40px;
-  left: 40px;
-  max-width: 450px;
-  z-index: 2; /* ensures it's on top of vectors */
-  color: #000;
+  left: 64px;
+  bottom: 96px;
+  z-index: 2;
+  max-width: 560px;
+  color: #111;
+  text-align: left;
 }
-
 .banner-content h1 {
-  font-size: 3rem;
+  font-size: clamp(36px, 6vw, 64px);
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
 }
-
 .banner-content p {
-  font-size: 1.1rem;
+  font-size: 18px;
   line-height: 1.5;
-  margin-bottom: 20px;
+  color: #222;
+  margin-bottom: 24px;
 }
-
 .shop-now-btn {
   display: inline-flex;
   align-items: center;
@@ -151,31 +144,15 @@
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
-  .banner-main {
-    min-height: auto;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .vector-frame-2 {
-    display: none; /* hide extra vectors */
-  }
-
   .banner-content {
     position: relative;
-    bottom: auto;
     left: auto;
-    max-width: 100%;
-    text-align: center;
-    margin-top: 20px;
+    bottom: auto;
+    margin: 24px auto;
+    padding: 0 16px;
+    max-width: 90%;
   }
-
-  .banner-content h1 {
-    font-size: 2rem;
-  }
-
-  .banner-content p {
-    font-size: 1rem;
+  .vector-frame-2 {
+    display: none;
   }
 }
