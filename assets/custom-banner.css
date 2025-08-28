@@ -1,16 +1,18 @@
 /* --- Main Banner Container --- */
-.custom-banner-container {
+.banner-container {
   display: flex;
   flex-direction: column;
   min-height: 90vh;
   background-color: #fff;
-  border: 2px solid #000;
-  font-family: Jost, Arial, sans-serif;
-  overflow: hidden; /* Important for contained borders */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  position: relative;
+  /* Yellow border lines */
+  border-top: 2px solid #FFD900;
+  border-bottom: 2px solid #FFD900;
 }
 
 /* --- Top Bar --- */
-.custom-banner__top-bar {
+.banner-top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,58 +26,55 @@
 .top-bar__center { text-align: center; }
 .top-bar__right { text-align: right; }
 .logo-text {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.25rem;
-  letter-spacing: 0.05em;
 }
 .promo-text {
-  font-family: serif;
   font-size: 1rem;
+  color: #333;
 }
 
-/* --- Main Content Area (Flexbox Layout) --- */
-.custom-banner__main {
+/* --- Main Content Area (Two-Column Flexbox Layout) --- */
+.banner-main {
   display: flex;
-  flex-grow: 1; /* Allows this area to fill available vertical space */
+  flex-grow: 1; /* Key for filling vertical space */
 }
 
 /* --- Left Column: Text --- */
-.custom-banner__content {
-  flex-basis: 45%; /* Takes up 45% of the width */
-  padding: 2rem 2.5rem;
+.banner-content {
+  flex-basis: 45%;
+  padding: 3rem 2.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically center the text and button */
+  justify-content: center;
   box-sizing: border-box;
 }
-.custom-banner__content h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+.banner-content h1 {
+  /* Drastically increased and responsive font size */
+  font-size: clamp(3rem, 7vw, 5.5rem);
   font-weight: 700;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.5rem 0;
   color: #000;
-  line-height: 1.1;
+  line-height: 1.05;
 }
-.custom-banner__content p {
+.banner-content p {
   font-size: 1.125rem;
   line-height: 1.6;
   color: #333;
-  margin: 0 0 2rem 0;
+  margin: 0 0 2.5rem 0;
+  max-width: 35em; /* Improves readability */
 }
 
 /* --- Right Column: Images --- */
-.custom-banner__images {
+.banner-images {
   flex-basis: 55%;
   display: flex;
-  flex-direction: column; /* Stack images vertically */
-  border-left: 2px solid #000;
+  flex-direction: column;
 }
 .vector-image {
   width: 100%;
-  height: 50%; /* Each image takes half the height of the column */
-  object-fit: cover; /* Fills the container without distortion */
-}
-.vector-image--1 {
-  border-bottom: 2px solid #000;
+  height: 50%;
+  object-fit: cover;
 }
 
 /* --- Buttons & Hover Transitions --- */
@@ -85,26 +84,25 @@
   align-items: center;
   gap: 0.75rem;
   text-decoration: none;
-  font-family: sans-serif;
   font-weight: 600;
   font-size: 1rem;
   text-transform: uppercase;
-  border: 2px solid #000;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 .choose-gift-btn {
-  background-color: #FFD900; /* A vibrant, accessible yellow */
+  background-color: #FFD900;
   color: #000;
   padding: 0.75rem 1.5rem;
+  border: 2px solid #000;
 }
 .shop-now-btn {
   background-color: #000;
   color: #fff;
   padding: 1rem 2.5rem;
-  align-self: flex-start; /* Prevent button from stretching full-width */
+  border: 2px solid #000;
+  align-self: flex-start;
 }
-
 .choose-gift-btn:hover {
   background-color: #000;
   color: #FFD900;
@@ -115,7 +113,7 @@
 }
 
 /* --- Bottom Footer Bar --- */
-.custom-banner__footer {
+.banner-footer {
   text-align: center;
   padding: 1rem 2.5rem;
   border-top: 2px solid #000;
@@ -126,23 +124,41 @@
   flex-shrink: 0;
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 800px) {
-  .custom-banner__main {
-    flex-direction: column; /* Stack columns on mobile */
+/* --- ================== --- */
+/* ---    MOBILE VIEW     --- */
+/* --- ================== --- */
+@media (max-width: 900px) {
+  .banner-main {
+    /* Stack columns on mobile */
+    flex-direction: column;
   }
-  .custom-banner__images {
-    border-left: none;
-    border-top: 2px solid #000;
-    flex-direction: row; /* Show images side-by-side if space allows */
-    height: 300px;
+  .banner-content {
+    /* Center text on mobile for better balance */
+    text-align: center;
+    align-items: center;
+    padding: 3rem 1.5rem;
+  }
+  .banner-images {
+    /* Give images a fixed height on mobile */
+    height: 350px;
+    flex-direction: row; /* Place side-by-side if they fit */
   }
   .vector-image {
     width: 50%;
     height: 100%;
   }
-  .vector-image--1 {
-    border-bottom: none;
-    border-right: 2px solid #000;
+}
+
+@media (max-width: 600px) {
+  .banner-top-bar {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .top-bar__center {
+    order: -1; /* Move promo text to the top */
+  }
+  .banner-images {
+    height: 250px;
   }
 }
