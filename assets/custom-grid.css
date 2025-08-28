@@ -163,10 +163,10 @@
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: #333;
-  font-size: 0.9rem;
+  font-size: 1.25rem;
 }
 
-/* --- NEW: Segmented Button Style for Color --- */
+/* --- Segmented Button Style for Color --- */
 .variant-buttons {
   display: flex;
   border: 1px solid #ccc;
