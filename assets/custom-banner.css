@@ -101,14 +101,9 @@
   align-self: flex-start;
 }
 .choose-gift-btn:hover { background-color: #000; color: #FFD900; }
-.shop-now-btn:hover { background-color: #333; }
+.shop-now-btn:hover { background-color: #FFD900; color: #000;}
 
-.choose-gift-btn::after,
-.shop-now-btn::after {
-  content: '→';
-  font-size: 1.25rem; /* Make arrow slightly larger */
-  transition: transform 0.3s ease;
-}
+
 
 /* --- Footer --- */
 .banner-footer {
