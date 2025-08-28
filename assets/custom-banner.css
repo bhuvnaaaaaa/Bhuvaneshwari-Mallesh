@@ -4,11 +4,7 @@
   flex-direction: column;
   min-height: 90vh;
   background-color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  position: relative;
-  /* Yellow border lines */
-  border-top: 2px solid #FFD900;
-  border-bottom: 2px solid #FFD900;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* --- Top Bar --- */
@@ -16,68 +12,73 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2.5rem;
-  border-bottom: 2px solid #000;
+  padding: 1.25rem 2.5rem;
+  border-bottom: 1px solid #e0e0e0;
   flex-shrink: 0;
 }
-.top-bar__left, .top-bar__center, .top-bar__right {
-  flex: 1;
-}
+.top-bar__left, .top-bar__center, .top-bar__right { flex: 1; }
 .top-bar__center { text-align: center; }
 .top-bar__right { text-align: right; }
-.logo-text {
-  font-weight: 700;
-  font-size: 1.25rem;
-}
-.promo-text {
-  font-size: 1rem;
-  color: #333;
-}
+.logo-text { font-weight: 700; font-size: 1.25rem; text-transform: uppercase; }
+.promo-text { font-size: 1rem; color: #333; }
 
-/* --- Main Content Area (Two-Column Flexbox Layout) --- */
+/* --- ================================== --- */
+/* ---    Main Content - CSS GRID         --- */
+/* --- ================================== --- */
 .banner-main {
-  display: flex;
-  flex-grow: 1; /* Key for filling vertical space */
+  flex-grow: 1;
+  display: grid;
+  /* Define a 2-row, 2-column grid */
+  grid-template-rows: 1fr 1fr; /* Two rows of equal height */
+  grid-template-columns: 45% 1fr; /* Left column is 45%, right column takes the rest */
 }
 
-/* --- Left Column: Text --- */
+/* --- Grid Item Placement --- */
+.banner-image-top {
+  grid-row: 1 / 2;       /* Start at row 1, end before row 2 */
+  grid-column: 1 / 3;    /* Start at column 1, end before column 3 (SPAN) */
+  overflow: hidden;
+}
 .banner-content {
-  flex-basis: 45%;
-  padding: 3rem 2.5rem;
+  grid-row: 2 / 3;       /* Start at row 2, end before row 3 */
+  grid-column: 1 / 2;    /* Start at column 1, end before column 2 */
+  padding: 2rem 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-sizing: border-box;
 }
-.banner-content h1 {
-  /* Drastically increased and responsive font size */
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  font-weight: 700;
-  margin: 0 0 1.5rem 0;
-  color: #000;
-  line-height: 1.05;
-}
-.banner-content p {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: #333;
-  margin: 0 0 2.5rem 0;
-  max-width: 35em; /* Improves readability */
+.banner-image-bottom-right {
+  grid-row: 2 / 3;       /* Start at row 2, end before row 3 */
+  grid-column: 2 / 3;    /* Start at column 2, end before column 3 */
+  overflow: hidden;
 }
 
-/* --- Right Column: Images --- */
-.banner-images {
-  flex-basis: 55%;
-  display: flex;
-  flex-direction: column;
-}
-.vector-image {
+/* Ensure images fill their grid area */
+.banner-image-top img,
+.banner-image-bottom-right img {
   width: 100%;
-  height: 50%;
+  height: 100%;
   object-fit: cover;
 }
 
-/* --- Buttons & Hover Transitions --- */
+/* --- Text Styling --- */
+.banner-content h1 {
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  font-weight: 800;
+  margin: 0 0 1.5rem 0;
+  color: #000;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.banner-content p {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #444;
+  margin: 0 0 2.5rem 0;
+  max-width: 32em;
+}
+
+/* --- Buttons (NO BORDERS) --- */
 .choose-gift-btn,
 .shop-now-btn {
   display: inline-flex;
@@ -88,77 +89,42 @@
   font-size: 1rem;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  border: none; /* BORDERS REMOVED */
+  transition: all 0.3s ease;
 }
 .choose-gift-btn {
   background-color: #FFD900;
   color: #000;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #000;
+  padding: 0.85rem 1.6rem; /* Slightly adjusted for no border */
 }
 .shop-now-btn {
   background-color: #000;
   color: #fff;
-  padding: 1rem 2.5rem;
-  border: 2px solid #000;
+  padding: 1.1rem 2.6rem; /* Slightly adjusted for no border */
   align-self: flex-start;
 }
-.choose-gift-btn:hover {
-  background-color: #000;
-  color: #FFD900;
-}
-.shop-now-btn:hover {
-  background-color: #FFD900;
-  color: #000;
-}
+.choose-gift-btn:hover { background-color: #000; color: #FFD900; }
+.shop-now-btn:hover { background-color: #333; }
 
-/* --- Bottom Footer Bar --- */
+/* --- Footer --- */
 .banner-footer {
   text-align: center;
   padding: 1rem 2.5rem;
-  border-top: 2px solid #000;
+  border-top: 1px solid #e0e0e0;
   font-size: 0.8rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   font-weight: 500;
+  color: #555;
   flex-shrink: 0;
 }
 
-/* --- ================== --- */
-/* ---    MOBILE VIEW     --- */
-/* --- ================== --- */
+/* --- Mobile View --- */
 @media (max-width: 900px) {
   .banner-main {
-    /* Stack columns on mobile */
+    display: flex; /* Revert to flexbox for simple stacking */
     flex-direction: column;
   }
-  .banner-content {
-    /* Center text on mobile for better balance */
-    text-align: center;
-    align-items: center;
-    padding: 3rem 1.5rem;
-  }
-  .banner-images {
-    /* Give images a fixed height on mobile */
-    height: 350px;
-    flex-direction: row; /* Place side-by-side if they fit */
-  }
-  .vector-image {
-    width: 50%;
-    height: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .banner-top-bar {
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem;
-  }
-  .top-bar__center {
-    order: -1; /* Move promo text to the top */
-  }
-  .banner-images {
-    height: 250px;
-  }
+  .banner-content { text-align: center; align-items: center; }
+  .banner-image-top, .banner-image-bottom-right { height: 300px; }
 }
