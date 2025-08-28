@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const gridContainer = document.querySelector('.custom-product-grid-container');
   if (!gridContainer) return;
 
-  // Find the modal *within this section* to avoid conflicts.
   const sectionRoot = gridContainer.closest('[id^="shopify-section"]') || document;
   const modal = sectionRoot.querySelector('#product-popup-modal');
   if (!modal) return;
@@ -46,13 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderOptions(p) {
     optionsHost.innerHTML = '';
-    const optionNames = p.options || []; // ["Color","Size",...]
+    const optionNames = p.options || []; 
     const variants = p.variants || [];
 
-    // Build values per option from variants
     const valuesByIndex = optionNames.map((_, i) => unique(variants.map(v => v[`option${i + 1}`])));
 
-    // Pick initial selection = first available variant
     const firstAvail = variants.find(v => v.available) || variants[0];
     selectedValues = optionNames.map((_, i) => (firstAvail ? firstAvail[`option${i + 1}`] : valuesByIndex[i]?.[0]));
 
@@ -65,51 +62,64 @@ document.addEventListener('DOMContentLoaded', () => {
       legend.textContent = name;
       fs.appendChild(legend);
 
-      if (idx === 0) {
+      // Color (buttons)
+      if (name.toLowerCase() === "color") {
         const wrap = document.createElement('div');
         wrap.className = 'variant-buttons';
         valuesByIndex[idx].forEach((val, j) => {
-          const id = `opt-${idx}-${j}`;
-          const input = document.createElement('input');
-          input.type = 'radio';
-          input.name = `option-${idx}`;
-          input.id = id;
-          input.value = val;
-          input.className = 'variant-radio-input';
-          if (val === selectedValues[idx]) input.checked = true;
+          const btn = document.createElement('button');
+          btn.type = "button";
+          btn.className = 'color-button';
+          btn.textContent = val;
+          if (val === selectedValues[idx]) btn.classList.add('active');
 
-          const label = document.createElement('label');
-          label.htmlFor = id;
-          label.className = 'variant-radio-label';
-          label.textContent = val;
-
-          input.addEventListener('change', () => {
-            selectedValues[idx] = input.value;
+          btn.addEventListener('click', () => {
+            selectedValues[idx] = val;
+            wrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             updateState();
           });
 
-          wrap.appendChild(input);
-          wrap.appendChild(label);
+          wrap.appendChild(btn);
         });
         fs.appendChild(wrap);
-      } else {
-        const wrap = document.createElement('div');
-        wrap.className = 'variant-select-wrapper';
-        const select = document.createElement('select');
-        select.className = 'variant-select';
+      } 
+      // Size (custom dropdown)
+      else if (name.toLowerCase() === "size") {
+        const dropdown = document.createElement('div');
+        dropdown.className = 'custom-dropdown';
+
+        const selected = document.createElement('div');
+        selected.className = 'dropdown-selected';
+        selected.textContent = selectedValues[idx];
+
+        const list = document.createElement('ul');
+        list.className = 'dropdown-options';
+
         valuesByIndex[idx].forEach(val => {
-          const opt = document.createElement('option');
-          opt.value = val;
-          opt.textContent = val;
-          if (val === selectedValues[idx]) opt.selected = true;
-          select.appendChild(opt);
+          const li = document.createElement('li');
+          li.textContent = val;
+          if (val === selectedValues[idx]) li.classList.add('active');
+
+          li.addEventListener('click', () => {
+            selectedValues[idx] = val;
+            selected.textContent = val;
+            list.querySelectorAll('li').forEach(el => el.classList.remove('active'));
+            li.classList.add('active');
+            dropdown.classList.remove('open');
+            updateState();
+          });
+
+          list.appendChild(li);
         });
-        select.addEventListener('change', () => {
-          selectedValues[idx] = select.value;
-          updateState();
+
+        selected.addEventListener('click', () => {
+          dropdown.classList.toggle('open');
         });
-        wrap.appendChild(select);
-        fs.appendChild(wrap);
+
+        dropdown.appendChild(selected);
+        dropdown.appendChild(list);
+        fs.appendChild(dropdown);
       }
 
       optionsHost.appendChild(fs);
@@ -145,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       product = await fetchProduct(handle);
-      // Fill static UI
       titleEl.textContent = product.title || '';
       imageEl.src = product.featured_image || product.images?.[0] || '';
       imageEl.alt = product.title || 'Product Image';
@@ -168,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const items = [{ id: Number(variantId), quantity: 1 }];
 
-    // Special rule: if Color=Black and Size=M, also add Soft Winter Jacket
     const v = product.variants.find(vr => vr.id == variantId);
     const softHandle = gridContainer.dataset.softJacketHandle;
     if (v && softHandle && v.option1 === 'Black' && (v.option2 === 'M' || v.option2 === 'Medium')) {
@@ -194,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Wire up
   grid?.addEventListener('click', handleGridClick);
   grid?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') handleGridClick(e);
