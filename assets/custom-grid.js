@@ -238,4 +238,4 @@ document.addEventListener('DOMContentLoaded', () => {
       openDropdown.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
     }
   });
-});```
+});
