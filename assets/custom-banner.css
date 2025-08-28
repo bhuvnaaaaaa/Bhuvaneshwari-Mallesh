@@ -56,10 +56,14 @@
 }
 
 /* Banner main */
-.banner-main {
+..banner-main {
   position: relative;
   flex: 1;
   min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; 
+  padding: 0 64px 96px; 
 }
 
 /* Vector images */
@@ -70,14 +74,15 @@
   z-index: 1;
 }
 .vector-frame-1 {
-  position: relative;   
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: auto;
   object-fit: cover;
   z-index: 0;
-  margin-bottom: 40px; 
 }
+
 .vector-frame-2 {
   position: absolute;
   bottom: 0;
@@ -88,28 +93,28 @@
 }
 
 
-/* Text block pinned bottom-left */
 .banner-content {
-  position: relative;  
-  margin-left: 64px;
-  margin-bottom: 96px;
+  position: relative;
+  z-index: 2;
   max-width: 560px;
   color: #111;
   text-align: left;
-  z-index: 2;
 }
+
 .banner-content h1 {
   font-size: clamp(36px, 6vw, 64px);
   font-weight: 700;
   margin-bottom: 16px;
   letter-spacing: -0.02em;
 }
+
 .banner-content p {
   font-size: 18px;
   line-height: 1.5;
   color: #222;
   margin-bottom: 24px;
 }
+
 .shop-now-btn {
   display: inline-flex;
   align-items: center;
@@ -147,13 +152,14 @@
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
+  .banner-main {
+    padding: 24px 16px 48px; /* smaller padding */
+  }
   .banner-content {
-    margin: 24px auto;
-    padding: 0 16px;
-    max-width: 90%;
-    text-align: center; /* center text on mobile */
+    max-width: 100%;
+    text-align: center;
   }
   .vector-frame-2 {
-    display: none; /* hide right image on small screens */
+    display: none; /* hide right image for clean mobile view */
   }
 }
