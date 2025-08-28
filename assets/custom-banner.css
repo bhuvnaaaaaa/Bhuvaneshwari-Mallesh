@@ -68,7 +68,7 @@
   letter-spacing: -0.03em;
 }
 .banner-content p {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   line-height: 1.7;
   color: #444;
   margin: 0 0 2.5rem 0;
@@ -97,7 +97,7 @@
 .shop-now-btn {
   background-color: #000;
   color: #fff;
-  padding: 1.1rem 2.6rem; /* Slightly adjusted for no border */
+  padding: 1.1rem 2.6rem; 
   align-self: flex-start;
 }
 .choose-gift-btn:hover { background-color: #000; color: #FFD900; }
@@ -108,7 +108,7 @@
   text-align: center;
   padding: 1rem 2.5rem;
   border-top: 1px solid #e0e0e0;
-  font-size: 0.8rem;
+  font-size: 1 rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   font-weight: 500;
