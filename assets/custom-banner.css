@@ -74,6 +74,8 @@
   margin: 0 0 2.5rem 0;
   max-width: 32em;
 }
+
+/* --- Buttons --- */
 .choose-gift-btn,
 .shop-now-btn {
   display: inline-flex;
@@ -81,47 +83,31 @@
   gap: 0.75rem;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem; /* Adjusted for better balance */
+  font-size: 1.25rem;
   text-transform: uppercase;
   cursor: pointer;
-  border: none;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Specific transitions are better than 'all' */
+  border: none; 
+  transition: all 0.3s ease;
 }
-
 .choose-gift-btn {
   background-color: #FFD900;
   color: #000;
-  padding: 0.85rem 1.6rem;
+  padding: 0.85rem 1.6rem; 
 }
-
 .shop-now-btn {
   background-color: #000;
   color: #fff;
-  padding: 1.1rem 2.6rem;
+  padding: 1.1rem 2.6rem; 
   align-self: flex-start;
 }
+.choose-gift-btn:hover { background-color: #000; color: #FFD900; }
+.shop-now-btn:hover { background-color: #333; }
 
-/* --- Arrows for Buttons - RESTORED --- */
 .choose-gift-btn::after,
 .shop-now-btn::after {
   content: '→';
   font-size: 1.25rem; /* Make arrow slightly larger */
   transition: transform 0.3s ease;
-}
-
-/* --- Hover States - RESTORED --- */
-.choose-gift-btn:hover {
-  background-color: #000;
-  color: #FFD900;
-}
-.shop-now-btn:hover {
-  background-color: #333;
-}
-
-/* --- Arrow Animation on Hover - RESTORED --- */
-.choose-gift-btn:hover::after,
-.shop-now-btn:hover::after {
-  transform: translateX(5px);
 }
 
 /* --- Footer --- */
