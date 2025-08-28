@@ -20,6 +20,8 @@
         "banner_description": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
         "shop_now_text": "SHOP NOW",
         "shop_now_link": "/",
+        "vector_frame_1": "shopify://shop_images/vector1.svg",
+        "vector_frame_2": "shopify://shop_images/vector1.svg",
         "footer_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
       }
     },
@@ -27,12 +29,12 @@
       "type": "custom-product-grid",
       "settings": {
         "title": "Tisso vison in the wild",
-        "product_1": "",
-        "product_2": "",
-        "product_3": "",
-        "product_4": "",
-        "product_5": "",
-        "product_6": "",
+        "product_1": "black-leather-bag",
+        "product_2": "blue-silk-tuxedo",
+        "product_3": "chequered-red-shirt",
+        "product_4": "classic-leather-jacket",
+        "product_5": "classic-varsity-top",
+        "product_6": "dark-denim-top",
         "soft_winter_jacket": ""
       }
     },
