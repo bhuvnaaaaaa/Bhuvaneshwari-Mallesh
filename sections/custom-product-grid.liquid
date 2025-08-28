@@ -6,7 +6,8 @@
   <div class="product-grid">
     {% for i in (1..6) %}
       {%- assign product_setting_key = 'product_' | append: i -%}
-      {%- assign selected_product = section.settings[product_setting_key] -%}
+      {%- assign product_ref = section.settings[product_setting_key] -%}
+      {%- assign selected_product = all_products[product_ref] -%}
       
       {% if selected_product != blank %}
         <div class="grid-item" role="button" tabindex="0" aria-label="View details for {{ selected_product.title }}" data-product-json="{{ selected_product | json | escape }}">
