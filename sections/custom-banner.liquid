@@ -11,14 +11,24 @@
     </div>
     <div class="top-bar__right">
       <a class="choose-gift-btn" href="{{ section.settings.choose_gift_link | default: '#' }}">
-        {{ section.settings.choose_gift_text }} &rarr;
+        {{ section.settings.choose_gift_text }}
       </a>
     </div>
   </div>
 
-  <!-- Main Content Area -->
+  <!-- Main Content Area - Now a CSS Grid Container -->
   <div class="banner-main">
-    <!-- Left Column: Text Content -->
+    <!-- These three elements will be placed by the grid -->
+    {% if section.settings.vector_frame_1 != blank %}
+      <div class="banner-image-top">
+        <img 
+          src="{{ section.settings.vector_frame_1 | image_url: width: 2000 }}" 
+          alt="Gift and travel items" 
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
     <div class="banner-content">
       <h1>{{ section.settings.banner_title }}</h1>
       <p>{{ section.settings.banner_description }}</p>
@@ -27,25 +37,15 @@
       </a>
     </div>
 
-    <!-- Right Column: Vector Images -->
-    <div class="banner-images">
-      {% if section.settings.vector_frame_1 != blank %}
-        <img 
-          src="{{ section.settings.vector_frame_1 | image_url: width: 1200 }}" 
-          alt="Illustration of gift items" 
-          class="vector-image"
-          loading="lazy"
-        >
-      {% endif %}
-      {% if section.settings.vector_frame_2 != blank %}
+    {% if section.settings.vector_frame_2 != blank %}
+      <div class="banner-image-bottom-right">
         <img 
           src="{{ section.settings.vector_frame_2 | image_url: width: 1200 }}" 
-          alt="Illustration of camera and travel items" 
-          class="vector-image"
+          alt="Camera and photography items" 
           loading="lazy"
         >
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div> 
 
   <!-- Bottom Footer Bar -->
@@ -66,8 +66,8 @@
     { "type": "textarea", "id": "banner_description", "label": "Banner Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
     { "type": "text", "id": "shop_now_text", "label": "Shop Now Button Text", "default": "SHOP NOW" },
     { "type": "url", "id": "shop_now_link", "label": "Shop Now Button Link" },
-    { "type": "image_picker", "id": "vector_frame_1", "label": "Vector Frame 1 (Top-Right)" },
-    { "type": "image_picker", "id": "vector_frame_2", "label": "Vector Frame 2 (Bottom-Right)" },
+    { "type": "image_picker", "id": "vector_frame_1", "label": "Vector Image 1 (Top Half)" },
+    { "type": "image_picker", "id": "vector_frame_2", "label": "Vector Image 2 (Bottom-Right)" },
     { "type": "text", "id": "footer_text", "label": "Footer Text", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL" }
   ],
   "presets": [
