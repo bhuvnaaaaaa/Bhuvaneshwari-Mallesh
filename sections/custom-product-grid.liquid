@@ -2,26 +2,26 @@
 
 <div id="custom-product-grid" class="custom-product-grid-container" data-soft-jacket-handle="{{ settings.soft_winter_jacket.handle }}">
   <h2 class="grid-title">{{ section.settings.title }}</h2>
-  
+
   <div class="product-grid">
     {% for i in (1..6) %}
       {%- assign product_setting_key = 'product_' | append: i -%}
-      {%- assign product_ref = section.settings[product_setting_key] -%}
-      {%- assign selected_product = all_products[product_ref] -%}
-      
+      {%- assign selected_product = section.settings[product_setting_key] -%}
+
       {% if selected_product != blank %}
-        <div class="grid-item" role="button" tabindex="0" aria-label="View details for {{ selected_product.title }}" data-product-json="{{ selected_product | json | escape }}">
+        <div class="grid-item"
+             role="button"
+             tabindex="0"
+             aria-label="View details for {{ selected_product.title }}"
+             data-product-handle="{{ selected_product.handle }}">
           {% if selected_product.featured_image %}
             {{ selected_product.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', class: 'grid-item-image' }}
           {% else %}
             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
           {% endif %}
-          <div class="plus-icon-overlay">
-            <span>+</span>
-          </div>
+          <div class="plus-icon-overlay"><span>+</span></div>
         </div>
       {% else %}
-        {% comment %} Render a placeholder if no product is selected {% endcomment %}
         <div class="grid-item-placeholder">
           {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
         </div>
@@ -29,6 +29,8 @@
     {% endfor %}
   </div>
 </div>
+
+
 
 {% comment %}
   ============================================================
