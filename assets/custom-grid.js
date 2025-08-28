@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchProduct(handle) {
     const res = await fetch(`/products/${handle}.js`);
-    if (!res.ok) throw new Error(`Product fetch failed for handle: ${handle}. Is the product published to the Online Store?`);
+    if (!res.ok) throw new Error(`Product fetch failed for handle: ${handle}. Is the product published?`);
     return res.json();
   }
 
@@ -44,7 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (modal.style.display = 'none'), 300);
   }
 
-  // --- Core Rendering and State Management ---
+  // --- ========================================================= ---
+  // ---   CORE RENDERING LOGIC - COMPLETELY REWRITTEN AND FIXED   ---
+  // --- ========================================================= ---
   function renderOptions() {
     optionsHost.innerHTML = '';
     if (!product.variants || product.variants.length === 0) {
@@ -53,27 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const initialVariant = product.variants.find(v => v.available) || product.variants[0];
 
-    // --- CORRECTED LOGIC ---
-    // Manually build the options with their values from the raw variant data,
-    // as `options_with_values` does not exist in the fetched JSON.
-    const optionsWithValues = product.options.map((optionName, index) => {
-        const optionKey = `option${index + 1}`;
-        // Use a Set to get only the unique values for this option
-        const values = [...new Set(product.variants.map(variant => variant[optionKey]))];
-        return { name: optionName, values: values };
-    });
-
-    optionsWithValues.forEach((option, index) => {
+    // The Shopify API `options` is an array of objects, e.g., [{ name: 'Size', ... }, { name: 'Color', ... }]
+    product.options.forEach((option, index) => {
       const fieldset = document.createElement('fieldset');
       fieldset.className = 'variant-fieldset';
       fieldset.dataset.optionIndex = index;
 
       const legend = document.createElement('legend');
       legend.className = 'variant-legend';
-      legend.textContent = option.name;
+      // CORRECTLY reads the name property from the option object, fixing '[object Object]'
+      legend.textContent = option.name; 
       fieldset.appendChild(legend);
 
-      if (index === 0) { // First option (e.g., Color) as radio buttons
+      // ROBUSTLY check by name, not by order/index
+      if (option.name.toLowerCase() === 'color') {
         const wrap = document.createElement('div');
         wrap.className = 'variant-buttons';
         option.values.forEach((value, valueIndex) => {
@@ -95,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wrap.appendChild(label);
         });
         fieldset.appendChild(wrap);
-      } else { // Subsequent options (e.g., Size) as custom dropdown
+      } else { // Any other option (like 'Size') becomes the custom dropdown
         fieldset.appendChild(createCustomDropdown(option, index, initialVariant));
       }
       optionsHost.appendChild(fieldset);
@@ -192,8 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
       updateState();
     } catch (err) {
       console.error("Popup failed to load:", err);
-      // We don't close the modal on error in production for a better UX,
-      // but we will show an error state.
       addBtnText.textContent = 'Error Loading';
     }
   }
@@ -245,4 +238,4 @@ document.addEventListener('DOMContentLoaded', () => {
       openDropdown.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
     }
   });
-});
+});```
