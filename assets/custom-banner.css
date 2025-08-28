@@ -19,12 +19,9 @@
 .top-bar__left, .top-bar__center, .top-bar__right { flex: 1; }
 .top-bar__center { text-align: center; }
 .top-bar__right { text-align: right; }
-.logo-text { font-weight: 700; font-size: 1.25rem; text-transform: uppercase; }
-.promo-text { font-size: 1rem; color: #333; }
+.logo-text { font-weight: 700; font-size: 1.5rem; text-transform: uppercase; }
+.promo-text { font-size: 1.25rem; color: #333; }
 
-/* --- ================================== --- */
-/* ---    Main Content - CSS GRID         --- */
-/* --- ================================== --- */
 .banner-main {
   flex-grow: 1;
   display: grid;
@@ -78,7 +75,7 @@
   max-width: 32em;
 }
 
-/* --- Buttons (NO BORDERS) --- */
+/* --- Buttons --- */
 .choose-gift-btn,
 .shop-now-btn {
   display: inline-flex;
@@ -86,16 +83,16 @@
   gap: 0.75rem;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   cursor: pointer;
-  border: none; /* BORDERS REMOVED */
+  border: none; 
   transition: all 0.3s ease;
 }
 .choose-gift-btn {
   background-color: #FFD900;
   color: #000;
-  padding: 0.85rem 1.6rem; /* Slightly adjusted for no border */
+  padding: 0.85rem 1.6rem; 
 }
 .shop-now-btn {
   background-color: #000;
