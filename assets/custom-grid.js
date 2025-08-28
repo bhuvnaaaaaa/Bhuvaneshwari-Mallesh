@@ -1,5 +1,3 @@
-// PASTE THIS ENTIRE CODE BLOCK INTO custom-grid.js
-
 document.addEventListener('DOMContentLoaded', () => {
   const gridContainer = document.querySelector('.custom-product-grid-container');
   if (!gridContainer) return;
@@ -8,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = sectionRoot.querySelector('#product-popup-modal');
   if (!modal) return;
 
+  // --- Query all modal elements once for efficiency ---
   const grid = gridContainer.querySelector('.product-grid');
   const closeButton = modal.querySelector('.popup-close-button');
   const form = modal.querySelector('#popup-add-to-cart-form');
@@ -22,18 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let product = null;
 
+  // --- Helper Functions ---
   const formatPrice = (cents) =>
     new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format((Number(cents) || 0) / 100);
 
   async function fetchProduct(handle) {
     const res = await fetch(`/products/${handle}.js`);
-    if (!res.ok) {
-        // More descriptive error for 404s
-        throw new Error(`Product fetch failed with status ${res.status}. Is the product with handle '${handle}' published to the Online Store?`);
-    }
+    if (!res.ok) throw new Error(`Product fetch failed for handle: ${handle}. Is the product published to the Online Store?`);
     return res.json();
   }
 
+  // --- Modal Visibility ---
   function openModal() {
     modal.style.display = 'flex';
     requestAnimationFrame(() => modal.classList.add('is-visible'));
@@ -46,23 +44,36 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (modal.style.display = 'none'), 300);
   }
 
+  // --- Core Rendering and State Management ---
   function renderOptions() {
     optionsHost.innerHTML = '';
-    // Error handling for products with no variants
     if (!product.variants || product.variants.length === 0) {
-        throw new Error(`The product '${product.title}' has no variants defined.`);
+      throw new Error(`Product '${product.title}' has no variants.`);
     }
+
     const initialVariant = product.variants.find(v => v.available) || product.variants[0];
 
-    product.options_with_values.forEach((option, index) => {
+    // --- CORRECTED LOGIC ---
+    // Manually build the options with their values from the raw variant data,
+    // as `options_with_values` does not exist in the fetched JSON.
+    const optionsWithValues = product.options.map((optionName, index) => {
+        const optionKey = `option${index + 1}`;
+        // Use a Set to get only the unique values for this option
+        const values = [...new Set(product.variants.map(variant => variant[optionKey]))];
+        return { name: optionName, values: values };
+    });
+
+    optionsWithValues.forEach((option, index) => {
       const fieldset = document.createElement('fieldset');
       fieldset.className = 'variant-fieldset';
       fieldset.dataset.optionIndex = index;
+
       const legend = document.createElement('legend');
       legend.className = 'variant-legend';
       legend.textContent = option.name;
       fieldset.appendChild(legend);
-      if (index === 0) {
+
+      if (index === 0) { // First option (e.g., Color) as radio buttons
         const wrap = document.createElement('div');
         wrap.className = 'variant-buttons';
         option.values.forEach((value, valueIndex) => {
@@ -76,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (value === initialVariant[`option${index + 1}`]) input.checked = true;
           input.addEventListener('change', updateState);
           wrap.appendChild(input);
+
           const label = document.createElement('label');
           label.htmlFor = id;
           label.className = 'variant-radio-label';
@@ -83,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wrap.appendChild(label);
         });
         fieldset.appendChild(wrap);
-      } else {
+      } else { // Subsequent options (e.g., Size) as custom dropdown
         fieldset.appendChild(createCustomDropdown(option, index, initialVariant));
       }
       optionsHost.appendChild(fieldset);
@@ -95,15 +107,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'custom-select-wrapper';
     wrapper.dataset.selectedValue = initialValue;
+
     const trigger = document.createElement('div');
     trigger.className = 'custom-select-trigger';
     trigger.setAttribute('role', 'button');
     trigger.setAttribute('aria-haspopup', 'listbox');
     trigger.setAttribute('aria-expanded', 'false');
     trigger.innerHTML = `<span>${initialValue}</span><div class="arrow"></div>`;
+
     const optionsList = document.createElement('ul');
     optionsList.className = 'custom-options';
     optionsList.setAttribute('role', 'listbox');
+
     option.values.forEach(value => {
       const li = document.createElement('li');
       li.textContent = value;
@@ -111,12 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
       li.setAttribute('role', 'option');
       optionsList.appendChild(li);
     });
+
     wrapper.appendChild(trigger);
     wrapper.appendChild(optionsList);
+
     trigger.addEventListener('click', () => {
       wrapper.classList.toggle('is-open');
       trigger.setAttribute('aria-expanded', wrapper.classList.contains('is-open'));
     });
+
     optionsList.addEventListener('click', (e) => {
       if (e.target.tagName === 'LI') {
         wrapper.dataset.selectedValue = e.target.dataset.value;
@@ -130,15 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateState() {
-    const selectedOptions = Array.from(optionsHost.querySelectorAll('[data-option-index]')).map((fieldset, i) => {
+    const selectedOptions = Array.from(optionsHost.querySelectorAll('[data-option-index]')).map((fieldset) => {
       const radio = fieldset.querySelector('input:checked');
       if (radio) return radio.value;
       const dropdown = fieldset.querySelector('.custom-select-wrapper');
       return dropdown ? dropdown.dataset.selectedValue : null;
     });
+
     const v = product.variants.find(variant =>
       selectedOptions.every((val, i) => variant[`option${i + 1}`] === val)
     );
+
     if (!v) {
       addBtn.disabled = true;
       addBtnText.textContent = 'Unavailable';
@@ -152,9 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addBtnText.textContent = v.available ? 'Add to Cart' : 'Sold Out';
   }
 
-  // =========================================================================
-  //   THIS IS THE MODIFIED FUNCTION WITH DEBUGGING ALERTS
-  // =========================================================================
+  // --- Event Handlers ---
   async function handleGridClick(e) {
     const el = e.target.closest('.grid-item');
     if (!el || !el.dataset.productHandle) return;
@@ -172,30 +190,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
       renderOptions();
       updateState();
-
     } catch (err) {
-      // --- MODIFICATION START ---
-      // Show an alert box with the error so we can't miss it.
-      alert("AN ERROR OCCURRED! See the developer console for details.\n\nError: " + err.message);
-      
-      // Log the full error object to the console.
-      console.error("Popup failed to load. The modal will stay open for inspection.", err);
-      
-      // I have COMMENTED OUT the line that closes the modal.
-      // closeModal(); 
-      // --- MODIFICATION END ---
+      console.error("Popup failed to load:", err);
+      // We don't close the modal on error in production for a better UX,
+      // but we will show an error state.
+      addBtnText.textContent = 'Error Loading';
     }
   }
-  // =========================================================================
 
   async function addToCart(e) {
     e.preventDefault();
     if (!variantIdInput.value) return;
+
     addBtn.disabled = true;
     addBtnText.textContent = 'Adding…';
+
     const items = [{ id: Number(variantIdInput.value), quantity: 1 }];
     const softHandle = gridContainer.dataset.softJacketHandle;
     const v = product.variants.find(vr => vr.id == variantIdInput.value);
+
     if (v && softHandle && v.option1 === 'Black' && (v.option2 === 'M' || v.option2 === 'Medium')) {
       try {
         const jacket = await (await fetch(`/products/${softHandle}.js`)).json();
@@ -203,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (jacketVar) items.push({ id: Number(jacketVar.id), quantity: 1 });
       } catch (e2) { console.warn('Soft Jacket fetch failed', e2); }
     }
+
     try {
       await fetch('/cart/add.js', {
         method: 'POST',
@@ -218,6 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // --- Wire up Event Listeners ---
   grid?.addEventListener('click', handleGridClick);
   closeButton?.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
