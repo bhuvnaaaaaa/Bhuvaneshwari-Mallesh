@@ -12,15 +12,23 @@
 
   <!-- Banner Main -->
   <div class="banner-main">
-    <div class="banner-vectors">
-      {% if section.settings.vector_frame_1 != blank %}
-        <img src="{{ section.settings.vector_frame_1 | image_url: width: 1600 }}" alt="Vector Frame 1" class="vector-frame-1">
-      {% endif %}
-      {% if section.settings.vector_frame_2 != blank %}
-        <img src="{{ section.settings.vector_frame_2 | image_url: width: 1000 }}" alt="Vector Frame 2" class="vector-frame-2">
-      {% endif %}
-    </div>
+    {% if section.settings.vector_frame_1 != blank %}
+      <img 
+        src="{{ section.settings.vector_frame_1 | image_url: width: 1600 }}" 
+        alt="Vector Frame 1" 
+        class="vector-frame-1"
+      >
+    {% endif %}
 
+    {% if section.settings.vector_frame_2 != blank %}
+      <img 
+        src="{{ section.settings.vector_frame_2 | image_url: width: 1000 }}" 
+        alt="Vector Frame 2" 
+        class="vector-frame-2"
+      >
+    {% endif %}
+
+    <!-- Text pinned bottom-left -->
     <div class="banner-content">
       <h1>{{ section.settings.banner_title }}</h1>
       <p>{{ section.settings.banner_description }}</p>
